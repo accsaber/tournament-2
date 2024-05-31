@@ -1,0 +1,11 @@
+kind: Kustomization
+namespace: acc-tournament
+resources:
+  - namespace.yml
+  - deployment.yml
+  - service.yml
+  - route.yml
+secretGenerator:
+  - name: acc-tournament-secret
+    envs:
+      - prod.env

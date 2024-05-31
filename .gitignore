@@ -35,3 +35,8 @@ acc_tournament-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# Deploy secrets
+/deploy/*.env
+
+# MacOS Resource forks
+.DS_Store
