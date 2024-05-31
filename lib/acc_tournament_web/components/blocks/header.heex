@@ -1,0 +1,117 @@
+<header class="text-white bg-gradient-to-l top-0 from-blue-600 to-purple-600" id="page-header">
+  <div class="flex items-center max-w-screen-lg gap-1.5 p-2 mx-auto">
+    <a class="headerNav flex gap-2  relative group p-2" href="/">
+      <img
+        src={~p"/images/logo.webp"}
+        alt="Acc Champ Community"
+        height="32"
+        width="32"
+        class="w-8 h-8 aspect-square relative transition-transform"
+      />
+    </a>
+    <nav class="flex-1 flex gap-1.5">
+      <a
+        aria-label="Leaderboards"
+        aria-current="page"
+        class="headerNav flex gap-2 relative group"
+        href="https://accsaber.com/leaderboards"
+      >
+        <div class="md:hidden">
+          <.icon name="hero-chart-bar-square" class="w-6 h-6" />
+        </div>
+        <div class="hidden md:block">Leaderboards</div>
+      </a>
+      <a
+        aria-label="Ranked Maps"
+        class="headerNav flex gap-2  relative group "
+        href="https://accsaber.com/maps"
+      >
+        <div class="md:hidden">
+          <.icon name="hero-map" class="w-6 h-6" />
+        </div>
+        <div class="hidden md:block">Ranked Maps</div>
+      </a>
+      <a
+        href="https://wiki.accsaber.com"
+        class="headerNav flex gap-2 relative group"
+        aria-label="Wiki"
+      >
+        <div class="md:hidden">
+          <.icon name="hero-book-open" class="w-6 h-6" />
+        </div>
+        <div class="hidden md:block">Wiki</div>
+      </a>
+      <.link
+        navigate={~p"/"}
+        class="headerNav flex gap-2 relative group active"
+        aria-label="Tournament"
+      >
+        <div class="md:hidden">
+          <.icon name="hero-trophy" class="w-6 h-6" />
+        </div>
+        <div class="hidden md:block">Tournament</div>
+      </.link>
+    </nav>
+    <nav class="hidden sm:flex items-center gap-2">
+      <.link
+        class="flex items-center headerNav justify-center relative group"
+        href="/users/log_in"
+      >
+        <.icon name="hero-user-plus" class="w-6 h-6" />
+        <div class="tooltip group-hover:translate-x-0">Log In</div>
+      </.link>
+    </nav>
+    <button class="p-3 headerNav sm:hidden" aria-label="Show Menu">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        aria-hidden="true"
+        class="w-5 h-5"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M3 6.75A.75.75 0 013.75 6h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 6.75zM3 12a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 12zm0 5.25a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z"
+          clip-rule="evenodd"
+        >
+        </path>
+      </svg>
+    </button>
+  </div>
+</header>
+<div id="scroll_canary" />
+<div class="tournament-header">
+  <div class="container">
+    <.link navigate={~p"/"} aria-label="Home" class="logo">
+      <img
+        src={~p"/images/logo.webp"}
+        alt="Home"
+        aria-label="Go Home"
+        class="h-8 aspect-square"
+        width={32}
+        height={32}
+      />
+    </.link>
+    <div class="logo-separator" />
+    <div class={["flex gap-2 items-center py-4 transition-opacity font-semibold"]}>
+      <img
+        src={~p"/images/tournament.webp"}
+        alt=""
+        class="rounded h-full aspect-square object-contain"
+        width="32"
+        height="32"
+      />
+      <div>ACC Tournament</div>
+    </div>
+    <nav class="flex-1 gap-2">
+      <.link
+        :for={link <- header_navigation()}
+        class={["pageNav", if(assigns[:route] && link.route == assigns[:route], do: "active")]}
+        navigate={link.navigate}
+      >
+        <%= link.label %>
+      </.link>
+    </nav>
+    <nav></nav>
+  </div>
+</div>

@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    margin: 0;
+}
+
+::backdrop {
+    @apply bg-black/50 backdrop-blur;
+}
+
+@layer components {
+    .easy {
+        @apply bg-green-400;
+    }
+
+    .headerNav {
+        @apply rounded p-2 md:px-4 items-center gap-2;
+    }
+
+    .headerNav:hover,
+    .headerNav.active {
+        @apply bg-black/10;
+    }
+
+    .pageNav {
+        @apply text-neutral-800 dark:text-neutral-300 px-4 py-2 flex items-center rounded hover:bg-black/5 dark:hover:bg-white/5;
+    }
+
+    .pageNav.active {
+        @apply bg-black/5 dark:bg-black/20;
+    }
+
+    .prose table tbody tr td:first-child {
+        @apply pl-2;
+    }
+
+    .prose table tbody tr td:last-child {
+        @apply pr-2;
+    }
+
+    .prose table tbody tr:nth-child(even) {
+        @apply bg-black/5 dark:bg-white/5;
+    }
+
+    .tooltip {
+        writing-mode: horizontal-tb;
+        @apply absolute bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 px-2 py-1 shadow rounded w-max pointer-events-none opacity-0;
+        @apply transform-gpu py-2 px-3 transition-all group-hover:opacity-100 group-hover:translate-x-1 z-[500];
+    }
+}
+
+.tournament-header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+
+    & .menu-toggle {
+        @apply w-6 h-6 flex;
+
+        & :global(svg) {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    & .container {
+        display: flex;
+        align-items: center;
+        margin: 0 auto;
+        @apply max-w-screen-lg gap-4 px-4 justify-between sm:justify-normal;
+    }
+
+    & nav {
+        @apply hidden sm:flex;
+    }
+
+    & .logo {
+        @apply w-12 h-12 aspect-square p-2 hidden sm:flex -mr-2  object-contain;
+        @apply hover:bg-black/5 dark:hover:bg-black/10 items-center gap-2 font-semibold transition-all;
+    }
+
+    &:not(.scrolled) .logo {
+        @apply -mr-16 pointer-events-none opacity-0;
+    }
+
+    & .logo-separator {
+        @apply transition-all w-px h-10 bg-black/10 dark:bg-white/5 mx-0 -ml-1 hidden sm:flex;
+    }
+
+    &:not(.scrolled) .logo-separator {
+        @apply opacity-0 -mx-2;
+    }
+
+    @apply bg-white text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200 transition-colors shadow mb-8;
+
+    &.scrolled {
+        z-index: 40;
+    }
+}
