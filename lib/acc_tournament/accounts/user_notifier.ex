@@ -5,10 +5,12 @@ defmodule AccTournament.Accounts.UserNotifier do
 
   # Delivers the email using the application mailer.
   defp deliver(recipient, subject, body) do
+    domain = Application.get_env(:acc_tournament, Mailer)[:domain] || "example.com"
+
     email =
       new()
       |> to(recipient)
-      |> from({"AccTournament", "contact@example.com"})
+      |> from({"Acc Tournament", "noreply@#{domain}"})
       |> subject(subject)
       |> text_body(body)
 

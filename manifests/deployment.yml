@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tournament-website
+  name: tournament-website
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tournament-website
+  template:
+    metadata:
+      labels:
+        app: tournament-website
+    spec:
+      imagePullSecrets:
+        - name: ghcr
+      initContainers:
+        - name: migrate
+          image: tournament-website
+
+          envFrom:
+            - secretRef:
+                name: acc-tournament-secret
+            - configMapRef:
+                name: acc-tournament-config
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: superUserPassword
+            - name: DATABASE_URL
+              value: postgres://postgres:$(POSTGRES_PASSWORD)@postgres:5432/acc_tournament
+          command:
+            - /app/bin/migrate
+
+          resources:
+            requests:
+              cpu: "10m"
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+      containers:
+        - name: tournament-website
+          image: tournament-website
+          envFrom:
+            - secretRef:
+                name: acc-tournament-secret
+            - configMapRef:
+                name: acc-tournament-config
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: superUserPassword
+            - name: DATABASE_URL
+              value: postgres://postgres:$(POSTGRES_PASSWORD)@postgres:5432/acc_tournament
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: web
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          ports:
+            - containerPort: 80
+              name: web
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: web
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 10m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 512Mi

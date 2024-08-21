@@ -2,7 +2,7 @@ import Config
 
 # Configure your database
 config :acc_tournament, AccTournament.Repo,
-  username: "acc",
+  username: "postgres",
   password: "postgres",
   hostname: "localhost",
   database: "acc_tournament_dev",

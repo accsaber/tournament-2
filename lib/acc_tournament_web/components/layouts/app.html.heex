@@ -1,4 +1,9 @@
-<LayoutComponents.header route={assigns[:route] || nil} />
+<LayoutComponents.header
+  route={assigns[:route] || nil}
+  current_user={assigns[:current_user] || nil}
+/>
 
-<.flash_group flash={@flash} />
-<%= @inner_content %>
+<main class="w-full max-w-screen-lg mx-auto p-4 py-8">
+  <.flash_group flash={@flash} />
+  <%= @inner_content %>
+</main>

@@ -36,7 +36,8 @@ npm-debug.log
 /assets/node_modules/
 
 # Deploy secrets
-/deploy/*.env
+*.env
+!/manifests/config.env
 
 # MacOS Resource forks
 .DS_Store

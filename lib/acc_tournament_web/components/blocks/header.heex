@@ -52,35 +52,29 @@
         <div class="hidden md:block">Tournament</div>
       </.link>
     </nav>
-    <nav class="hidden sm:flex items-center gap-2">
-      <.link
-        class="flex items-center headerNav justify-center relative group"
-        href="/users/log_in"
-      >
-        <.icon name="hero-user-plus" class="w-6 h-6" />
-        <div class="tooltip group-hover:translate-x-0">Log In</div>
-      </.link>
-    </nav>
-    <button class="p-3 headerNav sm:hidden" aria-label="Show Menu">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        aria-hidden="true"
-        class="w-5 h-5"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M3 6.75A.75.75 0 013.75 6h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 6.75zM3 12a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 12zm0 5.25a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z"
-          clip-rule="evenodd"
+    <nav class="pr-2 items-center gap-2">
+      <%= if assigns[:current_user] do %>
+        <.link navigate="/users/settings" class="profile-button">
+          <div class="avatar">
+            <.icon name="hero-user" />
+            <img src={AccTournament.Accounts.User.avatar_url(@current_user)} alt="" />
+          </div>
+          <div class="username"><%= @current_user.email %></div>
+        </.link>
+      <% else %>
+        <.link
+          class="flex items-center headerNav justify-center relative group"
+          href="/users/log_in"
         >
-        </path>
-      </svg>
-    </button>
+          <.icon name="hero-user-plus" class="w-6 h-6" />
+          <div class="tooltip group-hover:translate-x-0">Log In</div>
+        </.link>
+      <% end %>
+    </nav>
   </div>
 </header>
 <div id="scroll_canary" />
-<div class="tournament-header">
+<tournament-header>
   <div class="container">
     <.link navigate={~p"/"} aria-label="Home" class="logo">
       <img
@@ -114,4 +108,4 @@
     </nav>
     <nav></nav>
   </div>
-</div>
+</tournament-header>

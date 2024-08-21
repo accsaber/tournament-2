@@ -155,4 +155,8 @@ defmodule AccTournament.Accounts.User do
       add_error(changeset, :current_password, "is not valid")
     end
   end
+
+  def avatar_url(%__MODULE__{email: email}) do
+    "https://gravatar.com/avatar/#{email |> :erlang.md5() |> Base.encode16() |> String.downcase()}?d=blank"
+  end
 end

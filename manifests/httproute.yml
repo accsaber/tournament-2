@@ -1,0 +1,36 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  labels:
+    app: tournament-website
+  name: tournament-website
+
+spec:
+  hostnames:
+    - tournament.accsaber.com
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: accsaber
+      sectionName: https
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: tournament-website
+          port: 80
+      filters:
+        - responseHeaderModifier:
+            set:
+              - name: Strict-Transport-Security
+                value: max-age=63072000; includeSubDomains; preload
+          type: ResponseHeaderModifier
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: tournament-website
+          port: 80
+          weight: 1
