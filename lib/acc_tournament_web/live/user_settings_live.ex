@@ -13,6 +13,20 @@ defmodule AccTournamentWeb.UserSettingsLive do
     <div class="space-y-12 divide-y">
       <div>
         <.simple_form
+          for={@display_name_form}
+          id="display_name_form"
+          action={~p"/users/settings"}
+          phx-submit="update_display_name"
+          phx-change="validate_display_name"
+        >
+          <.input field={@display_name_form[:display_name]} type="text" label="Display Name" required />
+          <:actions>
+            <.button phx-disable-with="Changing...">Change Display Name</.button>
+          </:actions>
+        </.simple_form>
+      </div>
+      <div>
+        <.simple_form
           for={@email_form}
           id="email_form"
           phx-submit="update_email"
@@ -90,6 +104,7 @@ defmodule AccTournamentWeb.UserSettingsLive do
     user = socket.assigns.current_user
     email_changeset = Accounts.change_user_email(user)
     password_changeset = Accounts.change_user_password(user)
+    display_name_changeset = Accounts.change_user_display_name(user)
 
     socket =
       socket
@@ -98,6 +113,7 @@ defmodule AccTournamentWeb.UserSettingsLive do
       |> assign(:current_email, user.email)
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
+      |> assign(:display_name_form, to_form(display_name_changeset))
       |> assign(:trigger_submit, false)
 
     {:ok, socket}
@@ -113,6 +129,18 @@ defmodule AccTournamentWeb.UserSettingsLive do
       |> to_form()
 
     {:noreply, assign(socket, email_form: email_form, email_form_current_password: password)}
+  end
+
+  def handle_event("validate_display_name", params, socket) do
+    %{"user" => user_params} = params
+
+    display_name_form =
+      socket.assigns.current_user
+      |> Accounts.change_user_display_name(user_params)
+      |> Map.put(:action, :validate)
+      |> to_form()
+
+    {:noreply, assign(socket, display_name_form: display_name_form)}
   end
 
   def handle_event("update_email", params, socket) do
@@ -162,6 +190,24 @@ defmodule AccTournamentWeb.UserSettingsLive do
 
       {:error, changeset} ->
         {:noreply, assign(socket, password_form: to_form(changeset))}
+    end
+  end
+
+  def handle_event("update_display_name", params, socket) do
+    %{"user" => user_params} = params
+    user = socket.assigns.current_user
+
+    case Accounts.update_user_display_name(user, user_params) do
+      {:ok, user} ->
+        display_name_form =
+          user
+          |> Accounts.change_user_display_name(user_params)
+          |> to_form()
+
+        {:noreply, assign(socket, trigger_submit: true, display_name_form: display_name_form)}
+
+      {:error, changeset} ->
+        {:noreply, assign(socket, display_name_form: to_form(changeset))}
     end
   end
 end

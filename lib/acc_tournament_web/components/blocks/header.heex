@@ -52,19 +52,27 @@
         <div class="hidden md:block">Tournament</div>
       </.link>
     </nav>
-    <nav class="pr-2 items-center gap-2">
+    <nav class="pr-2 items-center gap-2 flex">
       <%= if assigns[:current_user] do %>
-        <.link navigate="/users/settings" class="profile-button">
+        <.link navigate={~p"/users/settings"} class="profile-button">
           <div class="avatar">
             <.icon name="hero-user" />
             <img src={AccTournament.Accounts.User.avatar_url(@current_user)} alt="" />
           </div>
-          <div class="username"><%= @current_user.email %></div>
+          <div class="username"><%= @current_user.display_name %></div>
+        </.link>
+        <.link
+          class="flex items-center headerNav justify-center relative group"
+          href={~p"/users/log_out"}
+          
+        >
+          <.icon name="hero-user-minus" class="w-6 h-6" />
+          <div class="tooltip group-hover:translate-x-0">Log Out</div>
         </.link>
       <% else %>
         <.link
           class="flex items-center headerNav justify-center relative group"
-          href="/users/log_in"
+          href={~p"/users/log_in"}
         >
           <.icon name="hero-user-plus" class="w-6 h-6" />
           <div class="tooltip group-hover:translate-x-0">Log In</div>

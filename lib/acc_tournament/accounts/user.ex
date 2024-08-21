@@ -3,6 +3,7 @@ defmodule AccTournament.Accounts.User do
   import Ecto.Changeset
 
   schema "users" do
+    field :display_name, :string
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
@@ -36,9 +37,19 @@ defmodule AccTournament.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:display_name, :email, :password])
     |> validate_email(opts)
     |> validate_password(opts)
+    |> validate_display_name(opts)
+  end
+
+  defp validate_display_name(changeset, _opts) do
+    changeset
+    |> validate_required([:display_name])
+    |> validate_length(:display_name, min: 3, max: 16)
+    |> validate_format(:display_name, ~r/^[a-zA-Z0-9\\-_. ]+$/,
+      message: "must contain only letters, numbers and -_."
+    )
   end
 
   defp validate_email(changeset, opts) do
@@ -99,6 +110,21 @@ defmodule AccTournament.Accounts.User do
     |> case do
       %{changes: %{email: _}} = changeset -> changeset
       %{} = changeset -> add_error(changeset, :email, "did not change")
+    end
+  end
+
+  @doc """
+  A user changeset for changing their display name.
+
+  It requires the name to change otherwise an error is added.
+  """
+  def display_name_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:display_name])
+    |> validate_display_name(opts)
+    |> case do
+      %{changes: %{display_name: _}} = changeset -> changeset
+      %{} = changeset -> add_error(changeset, :display_name, "did not change")
     end
   end
 

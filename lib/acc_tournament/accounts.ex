@@ -109,6 +109,19 @@ defmodule AccTournament.Accounts do
   end
 
   @doc """
+  Returns an `%Ecto.Changeset{}` for changing the user display name.
+
+  ## Examples
+
+      iex> change_user_display_name(user)
+      %Ecto.Changeset{data: %User{}}
+
+  """
+  def change_user_display_name(user, attrs \\ %{}) do
+    User.display_name_changeset(user, attrs)
+  end
+
+  @doc """
   Emulates that the email will change without actually changing
   it in the database.
 
@@ -212,6 +225,30 @@ defmodule AccTournament.Accounts do
     |> case do
       {:ok, %{user: user}} -> {:ok, user}
       {:error, :user, changeset, _} -> {:error, changeset}
+    end
+  end
+
+  @doc """
+  Updates the user display name.
+
+  ## Examples
+
+      iex> update_user_display_name(user, "valid name", %{display_name: ...})
+      {:ok, %User{}}
+
+      iex> update_user_display_name(user, "invalid name", %{display_name: ...})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_user_display_name(user, attrs) do
+    changeset =
+      user
+      |> User.display_name_changeset(attrs)
+
+    Repo.update(changeset)
+    |> case do
+      {:ok, user} -> {:ok, user}
+      {:error, changeset} -> {:error, changeset}
     end
   end
 
