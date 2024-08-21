@@ -60,6 +60,10 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
     """
   end
 
+  def mount(_, _, socket) do
+    {:ok, socket |> assign(show_container: false, route: :qualifiers)}
+  end
+
   def handle_params(%{"id" => map_id}, _uri, conn) do
     attempts =
       from(a in Attempt,
@@ -102,7 +106,6 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
       |> assign(
         map: map,
         attempts: attempts,
-        show_container: false,
         qualifier_pool: qualifier_pool
       )
     }

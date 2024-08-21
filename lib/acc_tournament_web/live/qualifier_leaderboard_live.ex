@@ -47,31 +47,6 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
 
   def render(assigns) do
     ~H"""
-    <picture>
-      <source
-        type="image/jxl"
-        srcset={"#{~p"/images/shiny/shiny@720x1280.jxl"} 720w, #{~p"/images/shiny/shiny@1080x1920.jxl"} 1080w, #{~p"/images/shiny/shiny@1920x1080.jxl"} 1920w, #{~p"/images/shiny/shiny@2560x1440.jxl"} 2560w, #{~p"/images/shiny/shiny@3840x2160.jxl"} 3840w"}
-      />
-      <source
-        type="image/avif"
-        srcset={"#{~p"/images/shiny/shiny@720x1280.avif"} 720w, #{~p"/images/shiny/shiny@1080x1920.avif"} 1080w, #{~p"/images/shiny/shiny@1920x1080.avif"} 1920w, #{~p"/images/shiny/shiny@2560x1440.avif"} 2560w, #{~p"/images/shiny/shiny@3840x2160.avif"} 3840w"}
-      />
-      <source
-        type="image/webp"
-        srcset={"#{~p"/images/shiny/shiny@720x1280.webp"} 720w, #{~p"/images/shiny/shiny@1080x1920.webp"} 1080w, #{~p"/images/shiny/shiny@1920x1080.webp"} 1920w, #{~p"/images/shiny/shiny@2560x1440.webp"} 2560w, #{~p"/images/shiny/shiny@3840x2160.webp"} 3840w"}
-      />
-      <source
-        type="image/jpg"
-        srcset={"#{~p"/images/shiny/shiny@720x1280.jpg"} 720w, #{~p"/images/shiny/shiny@1080x1920.jpg"} 1080w, #{~p"/images/shiny/shiny@1920x1080.jpg"} 1920w, #{~p"/images/shiny/shiny@2560x1440.jpg"} 2560w, #{~p"/images/shiny/shiny@3840x2160.jpg"} 3840w"}
-      />
-
-      <img
-        src={~p"/images/shiny/shiny@1920x1080.jpg"}
-        alt=""
-        id="waves-fallback"
-        class="absolute top-0 left-0 w-full h-80 pointer-events-none object-cover gradient-transparent blur-xl"
-      />
-    </picture>
     <.qualifier_header qualifier_pool={@qualifier_pool} current_route={{:leaderboard, :players}} />
     <div class="card max-w-screen-lg mx-auto relative prose dark:prose-invert">
       <table>
@@ -101,7 +76,7 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
   end
 
   def mount(_, _, socket) do
-    {:ok, socket |> assign(show_container: false)}
+    {:ok, socket |> assign(show_container: false, route: :qualifiers)}
   end
 
   def handle_params(_unsigned_params, _uri, socket) do

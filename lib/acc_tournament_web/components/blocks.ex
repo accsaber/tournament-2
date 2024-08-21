@@ -7,6 +7,11 @@ defmodule AccTournamentWeb.LayoutComponents do
         label: "Home",
         navigate: ~p"/",
         route: :home
+      },
+      %{
+        label: "Qualifiers",
+        navigate: ~p"/qualifiers",
+        route: :qualifiers
       }
     ]
 

@@ -11,7 +11,7 @@ defmodule AccTournamentWeb.UserLoginLive do
           This is strongly recommended as it means you don't need to share your email with us.
         </:subtitle>
       </.header>
-      <form action={BeatleaderLogin.get_login_uri()} method="get" class="mt-4">
+      <form action="https://api.beatleader.xyz/oauth2/authorize" method="get" class="mt-4">
         <input
           type="hidden"
           name="client_id"
