@@ -142,7 +142,7 @@ tournament-header {
 }
 
 .card {
-  @apply p-8 rounded shadow;
+  @apply p-8 rounded shadow bg-white dark:bg-neutral-800;
 }
 
 .user-cutout {

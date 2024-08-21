@@ -16,6 +16,8 @@ defmodule AccTournament.Accounts.User do
     field :headset, :string
     field :bio, :string
 
+    field :average_weight, :float
+
     has_many :account_bindings, AccTournament.Accounts.Binding
 
     timestamps(type: :utc_datetime)

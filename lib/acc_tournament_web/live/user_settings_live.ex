@@ -153,7 +153,6 @@ defmodule AccTournamentWeb.UserSettingsLive do
 
   def render(assigns) do
     ~H"""
-    <.header>User settings</.header>
     <form
       phx-submit="save_avatar"
       phx-change="validate_avatar"

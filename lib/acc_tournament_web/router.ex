@@ -24,6 +24,11 @@ defmodule AccTournamentWeb.Router do
       get "/", PageController, :home
 
       live "/@:id", ProfileLive, :view
+
+      scope "/qualifiers" do
+        live "/", QualifierLeaderboardLive
+        live "/map_leaderboard/:id", MapLeaderboardLive
+      end
     end
   end
 
