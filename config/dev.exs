@@ -29,6 +29,8 @@ config :acc_tournament, AccTournamentWeb.Endpoint,
     tailwind: {Tailwind, :install_and_run, [:acc_tournament, ~w(--watch)]}
   ]
 
+config :acc_tournament, beatleader_redirect_uri: "http://localhost:4000/auth/callback/beatleader"
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

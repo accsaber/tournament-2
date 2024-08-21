@@ -14,11 +14,11 @@ export class TournamentHeader extends HTMLElement {
 
   connectedCallback() {
     this.canary.setAttribute("data-scroll-canary", "");
-    document.body.insertBefore(this.canary, this);
+    this.parentNode!.insertBefore(this.canary, this);
     this.observer.observe(this.canary);
   }
   disconnectedCallback() {
-    document.body.removeChild(this.canary);
+    this.parentNode!.removeChild(this.canary);
     this.observer.unobserve(this.canary);
   }
 }

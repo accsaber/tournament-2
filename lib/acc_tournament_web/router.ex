@@ -17,10 +17,14 @@ defmodule AccTournamentWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", AccTournamentWeb do
-    pipe_through :browser
+  live_session(:default, on_mount: {AccTournamentWeb.UserAuth, :mount_current_user}) do
+    scope "/", AccTournamentWeb do
+      pipe_through :browser
 
-    get "/", PageController, :home
+      get "/", PageController, :home
+
+      live "/@:id", ProfileLive, :view
+    end
   end
 
   # Other scopes may use custom stacks.
@@ -69,6 +73,12 @@ defmodule AccTournamentWeb.Router do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end
+  end
+
+  scope "/auth", AccTournamentWeb do
+    pipe_through [:browser, :redirect_if_user_is_authenticated]
+
+    get "/callback/beatleader", OAuthLoginController, :beatleader
   end
 
   scope "/", AccTournamentWeb do

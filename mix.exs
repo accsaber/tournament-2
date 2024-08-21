@@ -58,7 +58,10 @@ defmodule AccTournament.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.2"}
+      {:oauth2, "~> 2.1"},
+      {:earmark, "~> 1.4"},
+      {:bandit, "~> 1.2"},
+      {:image, "~> 0.37"}
     ]
   end
 

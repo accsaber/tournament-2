@@ -1,0 +1,1 @@
+export BEATLEADER_CLIENT_SECRET=(kubectl get secret beatleader-oauth -o jsonpath="{.data.client_secret}" | base64 -d)

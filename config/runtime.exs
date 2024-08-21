@@ -20,6 +20,24 @@ if System.get_env("PHX_SERVER") do
   config :acc_tournament, AccTournamentWeb.Endpoint, server: true
 end
 
+config :acc_tournament,
+       :beatleader_client_id,
+       System.get_env("BEATLEADER_CLIENT_ID") || "accsaber"
+
+config :acc_tournament,
+       :beatleader_client_secret,
+       System.get_env("BEATLEADER_CLIENT_SECRET")
+
+config :acc_tournament,
+  beatleader_redirect_uri:
+    System.get_env("BEATLEADER_REDIRECT_URL") ||
+      "https://tournament.accsaber.com/auth/callback/beatleader"
+
+config :acc_tournament,
+  uploads_dir:
+    System.get_env("UPLOADS_DIR") || Application.app_dir(:acc_tournament, "priv/static/uploads/"),
+  uploads_prefix: URI.parse(System.get_env("UPLOADS_PREFIX") || "/")
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||

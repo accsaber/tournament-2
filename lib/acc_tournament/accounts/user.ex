@@ -4,10 +4,19 @@ defmodule AccTournament.Accounts.User do
 
   schema "users" do
     field :display_name, :string
+    field :slug, :string
     field :email, :string
+    field :avatar_url, :string
+    field :avatar_sizes, {:array, :string}
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+
+    field :pronouns, :string
+    field :headset, :string
+    field :bio, :string
+
+    has_many :account_bindings, AccTournament.Accounts.Binding
 
     timestamps(type: :utc_datetime)
   end
@@ -122,10 +131,63 @@ defmodule AccTournament.Accounts.User do
     user
     |> cast(attrs, [:display_name])
     |> validate_display_name(opts)
-    |> case do
-      %{changes: %{display_name: _}} = changeset -> changeset
-      %{} = changeset -> add_error(changeset, :display_name, "did not change")
-    end
+  end
+
+  @doc """
+  A user changeset for changing player's headset.
+  """
+  def headset_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:headset])
+    |> validate_headset(opts)
+  end
+
+  @doc """
+  A user changeset for changing pronuns.
+  """
+  def pronouns_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:pronouns])
+    |> validate_pronouns(opts)
+  end
+
+  @doc """
+  A user changeset for changing the bio
+  """
+  def bio_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:bio])
+    |> validate_bio(opts)
+  end
+
+  @doc """
+  A user changeset for changing the avatar
+  """
+  def avatar_changeset(user, attrs, _opts \\ []) do
+    user
+    |> cast(attrs, [:avatar_url, :avatar_sizes])
+  end
+
+  defp validate_pronouns(changeset, _opts) do
+    changeset
+    |> validate_required([:pronouns])
+    |> validate_format(:pronouns, ~r/^[a-zA-Z]+\/[a-zA-Z]+$/,
+      message: "must be in the form of a/b"
+    )
+    |> validate_length(:pronouns, min: 3)
+    |> validate_length(:pronouns, max: 32)
+  end
+
+  defp validate_headset(changeset, _opts) do
+    changeset
+    |> validate_required([:headset])
+    |> validate_length(:headset, min: 3)
+    |> validate_length(:headset, max: 32)
+  end
+
+  defp validate_bio(changeset, _opts) do
+    changeset
+    |> validate_length(:bio, max: 2048)
   end
 
   @doc """
@@ -182,7 +244,20 @@ defmodule AccTournament.Accounts.User do
     end
   end
 
-  def avatar_url(%__MODULE__{email: email}) do
-    "https://gravatar.com/avatar/#{email |> :erlang.md5() |> Base.encode16() |> String.downcase()}?d=blank"
+  def public_avatar_url(user, size \\ nil)
+
+  def public_avatar_url(%__MODULE__{avatar_url: "upload:" <> path}, size) do
+    path =
+      if size do
+        "/#{path}@#{size}.webp"
+      else
+        "/#{path}.webp"
+      end
+
+    URI.append_path(Application.fetch_env!(:acc_tournament, :uploads_prefix), path)
+  end
+
+  def public_avatar_url(%__MODULE__{email: email}, _size) do
+    "https://accsaber.com/api/avatar/#{email |> :erlang.md5() |> Base.encode16() |> String.downcase()}?d=blank"
   end
 end

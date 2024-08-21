@@ -3,7 +3,7 @@
   current_user={assigns[:current_user] || nil}
 />
 
-<main class="w-full max-w-screen-lg mx-auto p-4 py-8">
-  <.flash_group flash={@flash} />
+<.flash_group flash={@flash} />
+<div class="isolate relative">
   <%= @inner_content %>
-</main>
+</div>

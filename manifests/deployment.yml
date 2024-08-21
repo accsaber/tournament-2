@@ -46,6 +46,10 @@ spec:
       containers:
         - name: tournament-website
           image: tournament-website
+          volumeMounts:
+            - mountPath: /app/priv/static/uploads
+              name: uploads
+              subPath: tournament
           envFrom:
             - secretRef:
                 name: acc-tournament-secret
@@ -59,6 +63,16 @@ spec:
                   key: superUserPassword
             - name: DATABASE_URL
               value: postgres://postgres:$(POSTGRES_PASSWORD)@postgres:5432/acc_tournament
+            - name: BEATLEADER_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: beatleader-oauth
+                  key: client_id
+            - name: BEATLEADER_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: beatleader-oauth
+                  key: client_secret
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -90,3 +104,7 @@ spec:
             limits:
               cpu: 200m
               memory: 512Mi
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: accsaber-media
