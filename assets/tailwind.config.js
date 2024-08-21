@@ -11,7 +11,6 @@ module.exports = {
     "../lib/acc_tournament_web.ex",
     "../lib/acc_tournament_web/**/*.*ex",
   ],
-  darkMode: "class",
   theme: {
     extend: {
       colors: {

@@ -28,9 +28,3 @@ spec:
         - path:
             type: PathPrefix
             value: /
-    - backendRefs:
-        - group: ""
-          kind: Service
-          name: tournament-website
-          port: 80
-          weight: 1

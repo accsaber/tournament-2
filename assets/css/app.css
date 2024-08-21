@@ -8,6 +8,16 @@ body {
   height: 100%;
   overflow: auto;
   margin: 0;
+  @apply dark:bg-neutral-900 text-black dark:text-neutral-200;
+  color-scheme: light dark;
+}
+
+:root {
+  --rookie: #a84300;
+  --mercenary: #3498db;
+  --champ: #f1c40f;
+  --elder: #1abc9c;
+  --god: #9b59b6;
 }
 
 ::backdrop {
@@ -156,7 +166,7 @@ tournament-header {
   mask-image: linear-gradient(to right, #fff, #0000);
 }
 
-.dot-container {
+.dots-container {
   mask-image: linear-gradient(to bottom, #fff2, #0000);
 
   & .splashbg {
@@ -187,4 +197,72 @@ tournament-header {
 
 .gradient-transparent {
   mask-image: linear-gradient(#fff, transparent);
+}
+
+[data-highest-milestone="-1"] {
+  color: var(--rookie);
+}
+[data-highest-milestone="0"] {
+  color: var(--mercenary);
+}
+[data-highest-milestone="1"] {
+  color: var(--champ);
+}
+[data-highest-milestone="2"] {
+  color: var(--elder);
+}
+[data-highest-milestone="3"] {
+  color: var(--god);
+}
+
+/* forms */
+form,
+.form-root {
+  @apply prose dark:prose-invert mx-auto flex flex-col gap-6;
+
+  & label {
+    @apply gap-1.5 text-neutral-800 dark:text-neutral-300;
+  }
+
+  & input[type="text"],
+  & input[type="email"],
+  & input[type="password"],
+  & textarea:not(input),
+  & select:not(input),
+  & .field {
+    @apply block rounded bg-white dark:bg-neutral-800 shadow border-neutral-300 dark:border-neutral-600 m-0;
+  }
+
+  & input[type="checkbox"] {
+    @apply block rounded  shadow border-neutral-300 dark:border-neutral-600;
+  }
+
+  & kbd {
+    @apply bg-neutral-100 dark:bg-neutral-800 rounded px-1 whitespace-pre;
+  }
+
+  & .error {
+    @apply shadow bg-red-100 dark:bg-red-900 px-3 py-2 rounded;
+  }
+
+  & button[type="submit"],
+  & button[type="button"] {
+    @apply px-3 py-1.5 bg-blue-600 text-white rounded shadow;
+  }
+
+  & .message {
+    @apply bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-white px-4 py-2 rounded-lg;
+
+    &.error {
+      @apply bg-red-100 dark:bg-red-900 text-red-900 dark:text-white;
+    }
+  }
+}
+
+.uploadButton {
+  @apply px-3 py-2  dark:bg-neutral-800 rounded shadow transition-all w-full;
+
+  &:hover {
+    @apply shadow-lg dark:bg-neutral-700;
+  }
 }

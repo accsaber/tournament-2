@@ -5,5 +5,11 @@
 
 <.flash_group flash={@flash} />
 <div class="isolate relative">
-  <%= @inner_content %>
+  <%= if assigns[:show_container] != false do %>
+    <div class="w-full max-w-screen-lg mx-auto p-8">
+      <%= @inner_content %>
+    </div>
+  <% else %>
+    <%= @inner_content %>
+  <% end %>
 </div>

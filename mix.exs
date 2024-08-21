@@ -61,6 +61,7 @@ defmodule AccTournament.MixProject do
       {:oauth2, "~> 2.1"},
       {:earmark, "~> 1.4"},
       {:bandit, "~> 1.2"},
+      {:req, "~> 0.5"},
       {:image, "~> 0.37"}
     ]
   end

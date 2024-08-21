@@ -80,10 +80,9 @@ defmodule AccTournamentWeb.UserSettingsLive do
                   filename
                 )
 
-              img =
-                Image.open!(binary)
-                |> Image.thumbnail!(size, crop: :center)
-                |> Image.write!(outfile, effort: 6, quality: 90)
+              Image.open!(binary)
+              |> Image.thumbnail!(size, crop: :center)
+              |> Image.write!(outfile, effort: 6, quality: 90)
 
               suffix
             end)
@@ -154,28 +153,29 @@ defmodule AccTournamentWeb.UserSettingsLive do
 
   def render(assigns) do
     ~H"""
+    <.header>User settings</.header>
     <form
       phx-submit="save_avatar"
       phx-change="validate_avatar"
-      class="card max-w-screen-lg mx-auto mb-4"
+      class="mb-4 not-prose"
       phx-drop-target={@uploads.avatar.ref}
     >
       <.header>Update avatar</.header>
-      <%= for entry <- @uploads.avatar.entries do %>
-        <div :for={err <- upload_errors(@uploads.avatar, entry)} class="alert alert-danger">
-          <%= upload_error_to_string(err) %>
-        </div>
-      <% end %>
       <.live_file_input upload={@uploads.avatar} />
       <img src={User.public_avatar_url(@current_user)} class="w-24 h-24 rounded object-cover" />
       <%= for entry <- @uploads.avatar.entries do %>
-        <div class="upload-entry card shadow p-2 w-max">
+        <div class="flex gap-2 shadow p-2 w-max">
           <.live_img_preview entry={entry} class="w-24 h-24 rounded object-cover" />
 
-          <progress value={entry.progress} max="100" class="rounded"><%= entry.progress %>%</progress>
+          <div class="flex flex-col gap-2 justify-between flex-1">
+            <%= entry.client_name %>
+            <progress value={entry.progress} max="100" class="rounded">
+              <%= entry.progress %>%
+            </progress>
+          </div>
 
           <%= for err <- upload_errors(@uploads.avatar, entry) do %>
-            <p class="alert alert-danger"><%= err %></p>
+            <p class="alert alert-danger"><%= upload_error_to_string(err) %></p>
           <% end %>
         </div>
       <% end %>
@@ -185,9 +185,8 @@ defmodule AccTournamentWeb.UserSettingsLive do
       for={@user_settings_form}
       phx-change="validate_user_settings"
       phx-submit="update_user_settings"
-      class="card max-w-screen-lg mx-auto mb-4 flex flex-col gap-2"
+      class=" mx-auto mb-4 flex flex-col gap-2"
     >
-      <.header>Update user settings</.header>
       <.input field={@user_settings_form[:display_name]} label="Display name" />
       <.input
         type="select"
@@ -223,7 +222,6 @@ defmodule AccTournamentWeb.UserSettingsLive do
 
     {:ok,
      socket
-     |> assign(show_container: false)
      |> allow_upload(:avatar,
        accept: ~w(.jpg .jpeg .png .webp),
        max_entries: 1,

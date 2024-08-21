@@ -1,15 +1,14 @@
 defmodule AccTournamentWeb.UserLoginLive do
-  alias ElixirSense.Log
   alias AccTournament.BeatleaderLogin
   use AccTournamentWeb, :live_view
 
   def render(assigns) do
     ~H"""
-    <div class="mx-auto max-w-sm px-4 mt-16">
+    <div class="mx-auto p-8 max-w-md mt-16 bg-neutral-50 dark:bg-neutral-800 rounded-lg not-prose">
       <.header class="text-center">
         Log in with BeatLeader
         <:subtitle>
-          This is strongly recommended as it means you don't need to share your email.
+          This is strongly recommended as it means you don't need to share your email with us.
         </:subtitle>
       </.header>
       <form action={BeatleaderLogin.get_login_uri()} method="get" class="mt-4">
@@ -25,14 +24,24 @@ defmodule AccTournamentWeb.UserLoginLive do
           name="redirect_uri"
           value={AccTournamentWeb.OAuthLoginController.redirect_uri()}
         />
-        <.button class="w-full">Log in with BeatLeader</.button>
+        <.button class="w-full bg-neutral-200 dark:text-white text-neutral-800 dark:bg-neutral-900 flex justify-between">
+          <img src={~p"/images/beatleader.svg"} class="h-6 w-6" />
+          <div>
+            Log in with <strong class="text-pink-500">BeatLeader</strong>
+          </div>
+          <div class="w-6" />
+        </.button>
       </form>
     </div>
 
-    <div class="w-full max-w-[30rem] my-8 h-px bg-neutral-200 mx-auto" />
+    <div class="flex flex-row gap-4 items-center my-16 text-lg font-semibold">
+      <div class="w-full max-w-[30rem] h-px bg-neutral-200 dark:bg-neutral-800 mx-auto" />
+      <div>OR</div>
+      <div class="w-full max-w-[30rem] h-px bg-neutral-200 dark:bg-neutral-800 mx-auto" />
+    </div>
     <div class="mx-auto max-w-sm">
       <.header class="text-center">
-        Log in to account
+        Log in with email
         <:subtitle>
           Don't have an account?
           <.link navigate={~p"/users/register"} class="font-semibold text-brand hover:underline">

@@ -1,8 +1,6 @@
 defmodule AccTournamentWeb.ProfileLive do
   require Logger
   require Ecto.Query
-  alias AccTournament.Levels.Category
-  alias AccTournament.Levels.MapPool
   alias AccTournament.Accounts.User
   alias AccTournament.Repo
   use AccTournamentWeb, :live_view
@@ -21,50 +19,57 @@ defmodule AccTournamentWeb.ProfileLive do
 
   def render(assigns) do
     ~H"""
-    <img
-      src={User.public_avatar_url(@user)}
-      srcSet={avatar_src_set(@user)}
-      class="absolute top-0 left-0 w-full h-96 pointer-events-none object-cover gradient-transparent blur-xl opacity-70"
-    />
-    <div class="flex flex-col md:flex-row items-start md:items-center md:gap-8 relative max-w-screen-lg px-6 mx-auto pt-12">
-      <img
-        src={User.public_avatar_url(@user)}
-        srcSet={avatar_src_set(@user)}
-        class="w-24 md:w-40 lg:w-[11.5rem] aspect-square rounded-xl shadow-xl"
-      />
-      <div class="flex flex-col gap-1.5 py-3.5 w-full">
-        <div class="flex flex-col md:flex-row items-start gap-3 mb-2   md:items-end">
-          <h1 class="text-5xl items-baseline font-semibold ">
-            <%= @user.display_name %>
-          </h1>
+    <div class="relative">
+      <div class="dots-container absolute inset-0">
+        <div class="dots" />
+      </div>
+      <div class="w-full max-w-screen-lg mx-auto relative p-8 py-20 flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+        <div
+          class={[
+            "w-24 md:w-40 lg:w-[11.5rem] aspect-square relative rounded-xl",
+            "overflow-hidden shadow-xl flex items-center justify-center",
+            "text-neutral-300"
+          ]}
+          data-highest-milestone={@highest_milestone}
+        >
+          <img
+            class="absolute top-0 left-0 w-full h-full object-cover"
+            src={User.public_avatar_url(@user)}
+            srcSet={avatar_src_set(@user)}
+          />
         </div>
-        <div class="flex flex-wrap gap-1.5 items-start">
-          <div :if={@user.headset} class="country-badge"><%= @user.headset %></div>
-          <div :if={@user.pronouns} class="country-badge"><%= @user.pronouns %></div>
+        <div class="flex flex-col flex-1 gap-3">
+          <div class="text-5xl flex gap-3 items-baseline flex-1 font-semibold flex-wrap">
+            <span data-highest-milestone={@highest_milestone}><%= @user.display_name %></span>
 
-          <%= for %{service: service_id, platform_id: user_id} <- @user.account_bindings do %>
-            <% service = @service_links[service_id] %>
-            <.link
-              :if={@service_links[service_id]}
-              title={service.name}
-              href={URI.merge(service.prefix, user_id |> Integer.to_string())}
-              class="bg-neutral-100 px-2.5 py-1.5 hover:bg-neutral-200 rounded flex flex-row gap-2 items-center"
-            >
-              <img src={service.logo} alt={service.name} class="w-5 h-5 " />
-              <%= service.name %>
-            </.link>
-          <% end %>
+            <div class="bg-neutral-100 dark:bg-neutral-800 block text-xl relative bottom-1.5 px-2 rounded font-normal">
+              <%= @user.pronouns %>
+            </div>
+          </div>
+          <div class="text-3xl"><%= @user.headset %></div>
+          <div class="flex flex-wrap gap-1.5 items-start">
+            <%= for %{service: service_id, platform_id: user_id} <- @user.account_bindings do %>
+              <% service = @service_links[service_id] %>
+              <.link
+                :if={@service_links[service_id]}
+                title={service.name}
+                href={URI.merge(service.prefix, user_id |> Integer.to_string())}
+                class="bg-white dark:bg-neutral-800 shadow px-2.5 py-1.5 rounded flex flex-row gap-2 items-center"
+              >
+                <img src={service.logo} alt={service.name} class="w-5 h-5 " />
+                <%= service.name %>
+              </.link>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>
-    <div class="max-w-screen-lg px-6 mx-auto">
-      <div :if={@bio} class="flex flex-col gap-1 p-4 py-6 relative card mt-8 shadow">
-        <.header>Bio</.header>
-        <div class="prose max-w-none">
-          <%= raw(@bio) %>
-        </div>
+    <main :if={assigns[:bio]} class="w-full max-w-screen-lg mx-auto px-8">
+      <div class="body prose prose-neutral dark:prose-invert">
+        <h2>Bio</h2>
+        <%= raw(@bio) %>
       </div>
-    </div>
+    </main>
     """
   end
 
@@ -73,10 +78,8 @@ defmodule AccTournamentWeb.ProfileLive do
       Phoenix.PubSub.subscribe(AccTournament.PubSub, @topic)
     end
 
-    {:ok, socket}
+    {:ok, socket |> assign(show_container: false)}
   end
-
-  @preload_cols [:account_bindings, :country, [playstyles: :category]]
 
   defp load_user(user_id) do
     import Ecto.Query, only: [from: 2, preload: 2]
@@ -90,7 +93,6 @@ defmodule AccTournamentWeb.ProfileLive do
     )
   end
 
-  @spec handle_params(map(), any(), any()) :: {:noreply, any()}
   def handle_params(%{"id" => slug}, _, socket) do
     import Ecto.Query, only: [from: 2]
 
@@ -105,7 +107,37 @@ defmodule AccTournamentWeb.ProfileLive do
 
     user = Repo.one(query)
 
+    if is_nil(user) do
+      raise AccTournamentWeb.ProfileLive.UserNotFound
+    end
+
     bio_rendered = if(user.bio, do: user.bio |> Earmark.as_html!())
+
+    highest_milestone =
+      user.account_bindings
+      |> Enum.map(fn %{platform_id: platform_id} ->
+        milestone_url =
+          Application.get_env(:acc_tournament, :campaigns_url)
+          |> URI.append_path("/0/player-campaign-infos/#{platform_id}")
+
+        Task.async(fn ->
+          case Req.get(milestone_url) do
+            {:ok, %{status: 200, body: milestones}} ->
+              milestones
+
+            _ ->
+              nil
+          end
+        end)
+      end)
+      |> Task.await_many()
+      |> List.flatten()
+      |> Enum.filter(&(!is_nil(&1)))
+      |> Enum.map(& &1["milestoneId"])
+      |> case do
+        [] -> nil
+        milestones -> Enum.reduce(milestones, 0, &max(&1, &2))
+      end
 
     socket =
       socket
@@ -129,7 +161,8 @@ defmodule AccTournamentWeb.ProfileLive do
      socket
      |> assign(
        user: user,
-       page_title: user.display_name
+       page_title: user.display_name,
+       highest_milestone: highest_milestone
      )}
   end
 

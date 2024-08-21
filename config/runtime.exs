@@ -36,7 +36,10 @@ config :acc_tournament,
 config :acc_tournament,
   uploads_dir:
     System.get_env("UPLOADS_DIR") || Application.app_dir(:acc_tournament, "priv/static/uploads/"),
-  uploads_prefix: URI.parse(System.get_env("UPLOADS_PREFIX") || "/")
+  uploads_prefix: URI.parse(System.get_env("UPLOADS_PREFIX") || "/uploads/")
+
+config :acc_tournament,
+  campaigns_url: URI.parse(System.get_env("CAMPAIGNS_URL") || "https://campaigns.accsaber.com/")
 
 if config_env() == :prod do
   database_url =

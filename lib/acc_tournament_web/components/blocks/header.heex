@@ -54,51 +54,51 @@
     </nav>
     <nav class="pr-2 items-center gap-2 flex">
       <div :if={@current_user} class="flex flex-row gap-0.5">
-      <.link patch={~p"/@#{@current_user.slug}"} class="flex items-stretch">
-        <div class="w-10 h-10 flex items-center justify-center overflow-hidden rounded-full relative bg-white/5">
-          <.icon name="hero-user" />
-          <img
-            src={AccTournament.Accounts.User.public_avatar_url(@current_user)}
-            class="absolute top-0 left-0 w-full h-full"
-            loading="lazy"
-          />
-        </div>
-        <div class={[
-          "hidden md:flex items-center bg-white/5 user-cutout -ml-5 pl-8  pr-3 backdrop-blur",
-          case assigns[:path_info] do
-            ["profile", _] -> "text-highlight"
-            _ -> "hover:bg-white/10"
-          end
-        ]}>
-          <div class="max-w-[6em] overflow-hidden text-ellipsis whitespace-nowrap">
-            <%= @current_user.display_name %>
+        <.link patch={~p"/@#{@current_user.slug}"} class="flex items-stretch">
+          <div class="w-10 h-10 flex items-center justify-center overflow-hidden rounded-full relative bg-white/5">
+            <.icon name="hero-user" />
+            <img
+              src={AccTournament.Accounts.User.public_avatar_url(@current_user)}
+              class="absolute top-0 left-0 w-full h-full"
+              loading="lazy"
+            />
           </div>
-        </div>
-        <div class="user-cutout -ml-5 bg-white/5 md:hidden w-6 backdrop-blur" />
-      </.link>
+          <div class={[
+            "hidden md:flex items-center bg-white/10 user-cutout -ml-5 pl-8  pr-3 backdrop-blur",
+            case assigns[:path_info] do
+              ["profile", _] -> "text-highlight"
+              _ -> "hover:bg-white/15"
+            end
+          ]}>
+            <div class="max-w-[6em] overflow-hidden text-ellipsis whitespace-nowrap">
+              <%= @current_user.display_name %>
+            </div>
+          </div>
+          <div class="user-cutout -ml-5 bg-white/10 md:hidden w-6 backdrop-blur" />
+        </.link>
+        <.link
+          navigate={~p"/users/settings"}
+          class="flex items-center justify-center bg-white/10 hover:bg-white/15 w-10 h-10 gap-2 backdrop-blur"
+          aria-label="Profile Settings"
+        >
+          <.icon name="hero-cog-6-tooth" />
+        </.link>
+        <.link
+          navigate={~p"/users/log_out"}
+          class="rounded-r-full flex items-center justify-center bg-white/10 hover:bg-red-500 pr-3 pl-2 h-10 gap-2 backdrop-blur"
+          aria-label="Log in"
+        >
+          <.icon name="hero-arrow-left-on-rectangle" />
+        </.link>
+      </div>
       <.link
-        navigate={~p"/users/settings"}
-        class="flex items-center justify-center bg-white/5 hover:bg-white/10 w-10 h-10 gap-2 backdrop-blur"
-        aria-label="Profile Settings"
-      >
-        <.icon name="hero-cog-6-tooth" />
-      </.link>
-      <.link
-        navigate={~p"/users/log_out"}
-        class="rounded-r-full flex items-center justify-center bg-white/5 hover:bg-red-500 pr-3 pl-2 h-10 gap-2 backdrop-blur"
+        :if={!@current_user}
+        navigate={~p"/users/log_in"}
+        class="rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 h-10 px-4 gap-2"
         aria-label="Log in"
       >
-        <.icon name="hero-arrow-left-on-rectangle" />
+        <.icon name="hero-user-plus" /> Log In
       </.link>
-    </div>
-    <.link
-      :if={!@current_user}
-      navigate={~p"/users/log_in"}
-      class="rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 h-10 px-4 gap-2"
-      aria-label="Log in"
-    >
-      <.icon name="hero-user-plus" /> Log In
-    </.link>
     </nav>
   </div>
 </header>
