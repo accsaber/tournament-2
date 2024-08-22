@@ -4,7 +4,7 @@ defmodule AccTournament.Repo.Migrations.AddUserSlug do
   def change do
     execute "CREATE EXTENSION IF NOT EXISTS pgcrypto", ""
 
-    execute "ALTER TABLE users ADD COLUMN slug text GENERATED ALWAYS AS (replace(replace(left(encode(digest(id::text, 'sha256'), 'base64'), 8), '/', '_'), '+', '-'_))) STORED",
+    execute "ALTER TABLE users ADD COLUMN slug text GENERATED ALWAYS AS (regexp_replace(left(encode(digest(id::text, 'sha256'::text), 'base64'::text), 8), '[/+]'::text, '_'::text, 'g'::text)) STORED",
             "ALTER TABLE users DROP COLUMN slug"
 
     create unique_index(:users, [:slug])

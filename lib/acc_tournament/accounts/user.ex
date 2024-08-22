@@ -63,6 +63,12 @@ defmodule AccTournament.Accounts.User do
     )
   end
 
+  def sanitise_display_name(display_name) do
+    display_name
+    |> String.replace(~r/[^a-zA-Z0-9\\-_. ]+/, " ")
+    |> String.trim()
+  end
+
   defp validate_email(changeset, opts) do
     changeset
     |> validate_required([:email])
