@@ -20,7 +20,14 @@ defmodule AccTournamentWeb.ProfileLive do
   def render(assigns) do
     ~H"""
     <div class="relative">
-      <div class="dots-container absolute inset-0">
+      <div class="dots-container absolute inset-0 overflow-hidden">
+        <div class="absolute -inset-6 bottom-0 blur-[1.5rem]">
+          <img
+            class="object-cover w-full h-full"
+            src={User.public_avatar_url(@user)}
+            srcSet={avatar_src_set(@user)}
+          />
+        </div>
         <div class="dots" />
       </div>
       <div class="w-full max-w-screen-lg mx-auto relative p-8 py-20 flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
@@ -38,7 +45,7 @@ defmodule AccTournamentWeb.ProfileLive do
             srcSet={avatar_src_set(@user)}
           />
         </div>
-        <div class="flex flex-col flex-1 gap-3">
+        <div class="flex flex-col flex-1 gap-3 relative">
           <div class="text-5xl flex gap-3 items-baseline flex-1 font-semibold flex-wrap">
             <span data-highest-milestone={@highest_milestone}><%= @user.display_name %></span>
 
@@ -65,7 +72,7 @@ defmodule AccTournamentWeb.ProfileLive do
       </div>
     </div>
     <main :if={assigns[:bio]} class="w-full max-w-screen-lg mx-auto px-8">
-      <div class="body prose prose-neutral dark:prose-invert">
+      <div class="body prose lg:prose-lg prose-neutral dark:prose-invert max-w-none">
         <h2>Bio</h2>
         <%= raw(@bio) %>
       </div>

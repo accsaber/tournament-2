@@ -360,7 +360,6 @@ defmodule AccTournamentWeb.CoreComponents do
           @errors == [] && "border-zinc-300 focus:border-zinc-400 dark:border-zinc-700",
           @errors != [] && "border-rose-400 focus:border-rose-400 dark:border-rose-400"
         ]}
-        ]}
         {@rest}
       ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
       <.error :for={msg <- @errors}><%= msg %></.error>
