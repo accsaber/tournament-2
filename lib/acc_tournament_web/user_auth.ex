@@ -86,6 +86,52 @@ defmodule AccTournamentWeb.UserAuth do
     |> redirect(to: ~p"/")
   end
 
+  def fetch_user_from_auth_header(conn, _opts \\ []) do
+    alias AccTournament.Repo
+    token = conn |> extract_token_from_headers()
+    import Ecto.Query, only: [preload: 2]
+
+    if is_binary(token) do
+      token =
+        token
+        |> Accounts.UserToken.by_token_and_context_query("session")
+        |> preload(:user)
+        |> Repo.one()
+
+      IO.inspect(token)
+
+      case token do
+        %Accounts.UserToken{user: user} ->
+          conn
+          |> assign(:current_user, user)
+
+        _ ->
+          conn
+      end
+    else
+      conn
+    end
+  end
+
+  defp extract_token_from_headers(conn, _opts \\ []) do
+    auth_header = conn |> Plug.Conn.get_req_header("authorization")
+
+    case auth_header do
+      ["Bearer " <> token] ->
+        token |> parse_user_token(conn.secret_key_base)
+
+      _ ->
+        nil
+    end
+  end
+
+  defp parse_user_token(token, secret_key) do
+    case Plug.Crypto.decrypt(secret_key, "token", token) do
+      {:ok, t} -> t
+      _ -> nil
+    end
+  end
+
   @doc """
   Authenticates the user by looking into the session
   and remember me token.

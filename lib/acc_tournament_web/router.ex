@@ -24,6 +24,7 @@ defmodule AccTournamentWeb.Router do
   pipeline :api_authenticated do
     plug :fetch_session
     plug :fetch_current_user
+    plug :fetch_user_from_auth_header
     plug :require_authenticated_user, redirect: false
   end
 
@@ -106,13 +107,15 @@ defmodule AccTournamentWeb.Router do
     post "/users/log_in", UserSessionController, :create
   end
 
-  scope "/", AccTournamentWeb do
+  scope "/users/", AccTournamentWeb do
     pipe_through [:browser, :require_authenticated_user]
+
+    get "/download_qualifier_plugin", PluginDownloadController, :download
 
     live_session :require_authenticated_user,
       on_mount: [{AccTournamentWeb.UserAuth, :ensure_authenticated}] do
-      live "/users/settings", UserSettingsLive, :edit
-      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      live "/settings", UserSettingsLive, :edit
+      live "/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end
   end
 
