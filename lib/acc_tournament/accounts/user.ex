@@ -139,7 +139,7 @@ defmodule AccTournament.Accounts.User do
 
   It requires the name to change otherwise an error is added.
   """
-  def average_weight_changeset(user, attrs, opts \\ []) do
+  def average_weight_changeset(user, attrs, _opts \\ []) do
     user
     |> cast(attrs, [:average_weight])
   end

@@ -98,8 +98,6 @@ defmodule AccTournamentWeb.UserAuth do
         |> preload(:user)
         |> Repo.one()
 
-      IO.inspect(token)
-
       case token do
         %Accounts.UserToken{user: user} ->
           conn

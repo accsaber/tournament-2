@@ -190,12 +190,21 @@ defmodule AccTournamentWeb.UserSettingsLive do
         type="select"
         field={@user_settings_form[:pronouns]}
         label="Pronouns"
-        options={[{"he/him", "he/him"}, {"she/her", "she/her"}, {"they/them", "they/them"}]}
+        prompt="Choose pronouns"
+        options={
+          [
+            "he/him",
+            "she/her",
+            "they/them"
+          ]
+          |> Enum.map(&{&1, &1})
+        }
       />
       <.input
         type="select"
         field={@user_settings_form[:headset]}
         label="Headset"
+        prompt="Choose headset"
         options={
           [
             "Valve Index",
@@ -210,7 +219,7 @@ defmodule AccTournamentWeb.UserSettingsLive do
         }
       />
       <.input type="textarea" field={@user_settings_form[:bio]} label="Bio (Markdown supported)" />
-      <.button type="submit">Save</.button>
+      <.button type="submit" class="mt-2">Save</.button>
     </.form>
     """
   end
