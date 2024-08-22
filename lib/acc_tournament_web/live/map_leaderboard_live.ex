@@ -2,6 +2,7 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
   alias AccTournament.Levels.MapPool
   alias AccTournament.Qualifiers.Attempt
   alias AccTournament.Levels.BeatMap
+  alias AccTournament.Accounts.User
   import AccTournamentWeb.QualifierLeaderboardLive, only: [qualifier_header: 1]
 
   alias AccTournament.Repo
@@ -18,44 +19,57 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
     <.qualifier_header qualifier_pool={@qualifier_pool} current_route={{:map, @map.id}} />
     <div class="flex items-center gap-4 card relative max-w-screen-lg mx-auto  shadow-xl">
       <img src={BeatMap.cover_url(@map)} class="rounded-xl w-32 aspect-square" />
-      <div class="flex flex-col">
+      <div class="flex flex-col gap-0.5">
         <div class="text-3xl font-semibold"><%= @map.name %></div>
         <div><%= @map.artist %></div>
-        <div>Mapped by <%= @map.mapper %></div>
-        <div class="select-all p-0.5 px-1 bg-padding-bg rounded w-fit font-mono">
-          !bsr <%= @map.beatsaver_id %>
+        <div>Mapped by <strong class="font-semibold"><%= @map.mapper %></strong></div>
+        <div class="flex gap-0.5">
+          <div class="select-all px-2 h-8 flex items-center bg-neutral-100 dark:bg-neutral-900 rounded w-fit font-mono">
+            !bsr <%= @map.beatsaver_id %>
+          </div>
+          <a
+            href={"https://beatsaver.com/maps/#{@map.beatsaver_id}"}
+            class={[
+              "flex items-center justify-center",
+              "bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-700 rounded w-8 h-8"
+            ]}
+          >
+            <img src={~p"/images/beatsaver.svg"} class="h-4 w-4 dark:invert" />
+          </a>
         </div>
       </div>
     </div>
-    <div class="prose dark:prose-invert  relative max-w-screen-lg mx-auto p-6">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th colspan="2">Player</th>
-            <th>Score</th>
-            <th class="text-right">Accuracy</th>
-            <th class="text-right">Weight</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr :for={{rank, attempt} <- @attempts}>
-            <td><%= rank %></td>
-            <td>
-              <.link navigate={~p"/profile/#{attempt.player.slug}"}>
-                <%= attempt.player.display_name %>
-              </.link>
-            </td>
-            <td><%= attempt.score %></td>
-            <td class="tabular-nums text-right">
-              <%= (attempt.score / @map.max_score * 100) |> :erlang.float_to_binary(decimals: 2) %>%
-            </td>
-            <td :if={attempt.weight} class="text-right tabular-nums">
-              <%= attempt.weight |> :erlang.float_to_binary(decimals: 2) %>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="relative max-w-screen-lg mx-auto p-6">
+      <.table rows={@attempts} id={"#{@map.id}-attempts"}>
+        <:col :let={{rank, _attempt}} label="#">
+          <%= rank %>
+        </:col>
+        <:col :let={{_rank, attempt}} label="Player">
+          <.link
+            navigate={~p"/profile/#{attempt.player.slug}"}
+            class="flex gap-2 items-center relative font-semibold underline"
+          >
+            <img src={User.public_avatar_url(attempt.player)} class="h-6 w-6 rounded-full absolute" />
+            <div class="w-full ml-8">
+              <%= attempt.player.display_name %>
+            </div>
+          </.link>
+        </:col>
+        <:col :let={{_rank, attempt}} label="Score">
+          <%= attempt.score %>
+        </:col>
+        <:col :let={{_rank, attempt}} label="Accuracy">
+          <%= (attempt.score / @map.max_score * 100) |> :erlang.float_to_binary(decimals: 2) %>%
+        </:col>
+        <:col :let={{_rank, attempt}} label="Weight">
+          <%= attempt.weight |> :erlang.float_to_binary(decimals: 2) %>
+        </:col>
+        <:action :let={{_rank, attempt}}>
+          <.link navigate={~p"/profile/#{attempt.player.slug}"} class="text-sm font-semibold">
+            Profile
+          </.link>
+        </:action>
+      </.table>
     </div>
     """
   end
@@ -77,7 +91,7 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
       from(a in subquery(attempts),
         order_by: [desc: a.score],
         select: {dense_rank() |> over(partition_by: a.map_id, order_by: [desc: a.score]), a},
-        preload: [player: [:country]]
+        preload: [:player]
       )
 
     map =

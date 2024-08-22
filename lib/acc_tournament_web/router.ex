@@ -23,19 +23,32 @@ defmodule AccTournamentWeb.Router do
 
       get "/", PageController, :home
 
-      live "/@:id", ProfileLive, :view
+      live "/profile/:id", ProfileLive, :view
 
       scope "/qualifiers" do
         live "/", QualifierLeaderboardLive
         live "/map_leaderboard/:id", MapLeaderboardLive
       end
+
+      scope "/map_pools" do
+        get "/", MapPoolsController, :pool_listing
+        get "/:id", MapPoolsController, :map_listing
+      end
     end
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", AccTournamentWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", AccTournamentWeb do
+    pipe_through :api
+
+    scope "/map_pools" do
+      get "/", MapPoolsController, :pool_listing
+      get "/categories", MapPoolsController, :category_listing
+      get "/:id/maps", MapPoolsController, :map_listing
+      get "/:id/playlist", MapPoolsController, :playlist
+      get "/:id/:category/playlist", MapPoolsController, :cat_playlist
+    end
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:acc_tournament, :dev_routes) do

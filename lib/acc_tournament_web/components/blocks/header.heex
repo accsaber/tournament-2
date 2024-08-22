@@ -54,7 +54,7 @@
     </nav>
     <nav class="pr-2 items-center gap-2 flex">
       <div :if={@current_user} class="flex flex-row gap-0.5">
-        <.link patch={~p"/@#{@current_user.slug}"} class="flex items-stretch">
+        <.link patch={~p"/profile/#{@current_user.slug}"} class="flex items-stretch">
           <div class="w-10 h-10 flex items-center justify-center overflow-hidden rounded-full relative bg-white/5">
             <.icon name="hero-user" />
             <img

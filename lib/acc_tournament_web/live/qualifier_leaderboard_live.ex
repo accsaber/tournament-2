@@ -48,29 +48,31 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
   def render(assigns) do
     ~H"""
     <.qualifier_header qualifier_pool={@qualifier_pool} current_route={{:leaderboard, :players}} />
-    <div class="card max-w-screen-lg mx-auto relative prose dark:prose-invert">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th colspan="2">Player</th>
-            <th class="text-right whitespace-nowrap">Average weight</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr :for={{rank, player} <- @players}>
-            <td><%= rank %></td>
-            <td class="not-prose">
-              <img src={User.public_avatar_url(player)} class="h-6 w-6 rounded-full -my-2" />
-            </td>
-            <td class="w-full"><%= player.display_name %></td>
-
-            <td :if={player.average_weight} class="text-right tabular-nums">
-              <%= player.average_weight |> :erlang.float_to_binary(decimals: 2) %>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="card max-w-screen-lg mx-auto relative">
+      <.table rows={@players} id="players">
+        <:col :let={{rank, _player}} label="#">
+          <%= rank %>
+        </:col>
+        <:col :let={{_rank, player}} label="Player">
+          <.link
+            navigate={~p"/profile/#{player.slug}"}
+            class="flex gap-2 items-center relative font-semibold underline"
+          >
+            <img src={User.public_avatar_url(player)} class="h-6 w-6 rounded-full absolute" />
+            <div class="w-full ml-8">
+              <%= player.display_name %>
+            </div>
+          </.link>
+        </:col>
+        <:col :let={{_rank, player}} label="Average Weight">
+          <%= player.average_weight |> :erlang.float_to_binary(decimals: 2) %>
+        </:col>
+        <:action :let={{_rank, player}}>
+          <.link navigate={~p"/profile/#{player.slug}"} class="text-sm font-semibold">
+            Profile
+          </.link>
+        </:action>
+      </.table>
     </div>
     """
   end

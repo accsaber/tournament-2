@@ -12,6 +12,11 @@ defmodule AccTournamentWeb.LayoutComponents do
         label: "Qualifiers",
         navigate: ~p"/qualifiers",
         route: :qualifiers
+      },
+      %{
+        label: "Map Pools",
+        navigate: ~p"/map_pools",
+        route: :map_pools
       }
     ]
 

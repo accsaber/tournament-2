@@ -10,7 +10,7 @@ defmodule AccTournament.BeatleaderLogin do
       "client_id" => Application.fetch_env!(:acc_tournament, :beatleader_client_id),
       "response_type" => "code",
       "scope" => "profile",
-      "redirect_uri" => "https://bseuc.eu/auth/callback/beatleader"
+      "redirect_uri" => Application.fetch_env!(:acc_tournament, :beatleader_redirect_uri)
     }
 
     URI.parse("https://api.beatleader.xyz/oauth2/authorize")
