@@ -15,6 +15,16 @@ defmodule AccTournamentWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+
+    plug Plug.Parsers,
+      parsers: [:urlencoded, :json],
+      json_decoder: Jason
+  end
+
+  pipeline :api_authenticated do
+    plug :fetch_session
+    plug :fetch_current_user
+    plug :require_authenticated_user, redirect: false
   end
 
   live_session(:default, on_mount: {AccTournamentWeb.UserAuth, :mount_current_user}) do
@@ -47,6 +57,19 @@ defmodule AccTournamentWeb.Router do
       get "/:id/maps", MapPoolsController, :map_listing
       get "/:id/playlist", MapPoolsController, :playlist
       get "/:id/:category/playlist", MapPoolsController, :cat_playlist
+    end
+
+    get "/qualifiers/leaderboard/:hash/:difficulty", QualifierScoreController, :leaderboard
+
+    scope "/qualifiers" do
+      pipe_through :api_authenticated
+      get "/whoami", ApiUserController, :whoami
+      get "/attempts/:map_id", QualifierScoreController, :list_attempts
+
+      get "/remaining-attempts/:hash/:difficulty", QualifierScoreController, :remaining_attempts
+
+      post "/create_attempt", QualifierScoreController, :create_attempt
+      post "/submit_attempt", QualifierScoreController, :submit_attempt
     end
   end
 

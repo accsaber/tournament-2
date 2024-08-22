@@ -127,12 +127,21 @@ defmodule AccTournament.Accounts.User do
   @doc """
   A user changeset for changing their display name.
 
-  It requires the name to change otherwise an error is added.
   """
   def display_name_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:display_name])
     |> validate_display_name(opts)
+  end
+
+  @doc """
+  A user changeset for changing their average weight.
+
+  It requires the name to change otherwise an error is added.
+  """
+  def average_weight_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:average_weight])
   end
 
   @doc """

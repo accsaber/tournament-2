@@ -1,5 +1,4 @@
 defmodule AccTournamentWeb.UserLoginLive do
-  alias AccTournament.BeatleaderLogin
   use AccTournamentWeb, :live_view
 
   def render(assigns) do

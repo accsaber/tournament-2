@@ -62,7 +62,8 @@ defmodule AccTournament.MixProject do
       {:earmark, "~> 1.4"},
       {:bandit, "~> 1.2"},
       {:req, "~> 0.5"},
-      {:image, "~> 0.37"}
+      {:image, "~> 0.37"},
+      {:oban, "~> 2.17"}
     ]
   end
 

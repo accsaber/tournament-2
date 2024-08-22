@@ -1,5 +1,4 @@
 defmodule AccTournamentWeb.UserSettingsLive do
-  alias AccTournament.Levels.Category
   alias AccTournament.Repo
   alias AccTournament.Accounts.User
   use AccTournamentWeb, :live_view
