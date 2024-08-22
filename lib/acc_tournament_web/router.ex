@@ -34,6 +34,8 @@ defmodule AccTournamentWeb.Router do
 
       get "/", PageController, :home
 
+      get "/health", HealthController, :index
+
       live "/profile/:id", ProfileLive, :view
 
       scope "/qualifiers" do
