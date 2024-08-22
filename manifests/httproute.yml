@@ -4,6 +4,8 @@ metadata:
   labels:
     app: tournament-website
   name: tournament-website
+  annotations:
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
 
 spec:
   hostnames:
