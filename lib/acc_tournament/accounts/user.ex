@@ -58,15 +58,6 @@ defmodule AccTournament.Accounts.User do
     changeset
     |> validate_required([:display_name])
     |> validate_length(:display_name, min: 3, max: 16)
-    |> validate_format(:display_name, ~r/^[a-zA-Z0-9\\-_. ]+$/,
-      message: "must contain only letters, numbers and -_."
-    )
-  end
-
-  def sanitise_display_name(display_name) do
-    display_name
-    |> String.replace(~r/[^a-zA-Z0-9\\-_. ]+/, " ")
-    |> String.trim()
   end
 
   defp validate_email(changeset, opts) do

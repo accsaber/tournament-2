@@ -46,8 +46,6 @@ defmodule AccTournament.BeatleaderLogin do
   def create_user_from_beatleader_profile(%{"id" => id, "name" => username}) do
     {int_id, _} = Integer.parse(id)
 
-    username = User.sanitise_display_name(username)
-
     {:ok, result} =
       Ecto.Multi.new()
       |> Ecto.Multi.insert(
