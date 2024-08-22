@@ -48,7 +48,7 @@ defmodule AccTournament.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:display_name, :email, :password])
+    |> cast(attrs, [:display_name, :email, :password, :avatar_url])
     |> validate_email(opts)
     |> validate_password(opts)
     |> validate_display_name(opts)
@@ -257,6 +257,8 @@ defmodule AccTournament.Accounts.User do
 
   def public_avatar_url(user, size \\ nil)
 
+  def public_avatar_url(%__MODULE__{avatar_url: "https://" <> _path = url}, _size), do: url
+
   def public_avatar_url(%__MODULE__{avatar_url: "upload:" <> path}, size) do
     path =
       if size do
@@ -266,6 +268,7 @@ defmodule AccTournament.Accounts.User do
       end
 
     URI.append_path(Application.fetch_env!(:acc_tournament, :uploads_prefix), path)
+    |> URI.to_string()
   end
 
   def public_avatar_url(%__MODULE__{email: email}, _size) do

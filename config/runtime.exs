@@ -31,7 +31,7 @@ config :acc_tournament,
 config :acc_tournament,
   beatleader_redirect_uri:
     System.get_env("BEATLEADER_REDIRECT_URL") ||
-      "https://tournament.accsaber.com/auth/callback/beatleader"
+      "http://localhost:4000/auth/callback/beatleader"
 
 config :acc_tournament,
   uploads_dir:

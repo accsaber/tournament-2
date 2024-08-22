@@ -43,7 +43,7 @@ defmodule AccTournament.BeatleaderLogin do
   defp generate_random_password(),
     do: for(_ <- 1..72, into: "", do: <<Enum.random(~c"0123456789abcdef")>>)
 
-  def create_user_from_beatleader_profile(%{"id" => id, "name" => username}) do
+  def create_user_from_beatleader_profile(%{"id" => id, "name" => username} = identity) do
     {int_id, _} = Integer.parse(id)
 
     {:ok, result} =
@@ -56,7 +56,8 @@ defmodule AccTournament.BeatleaderLogin do
         |> User.registration_changeset(%{
           display_name: username,
           password: generate_random_password(),
-          email: id <> "@beatleader"
+          email: id <> "@beatleader",
+          avatar_url: identity["avatar"] || nil
         })
       )
       |> Ecto.Multi.run(

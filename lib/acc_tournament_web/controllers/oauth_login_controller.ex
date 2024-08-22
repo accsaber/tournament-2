@@ -62,6 +62,11 @@ defmodule AccTournamentWeb.OAuthLoginController do
 
     identity = Jason.decode!(identity)
 
+    %{body: identity} =
+      Req.get!("https://api.beatleader.xyz/player/" <> identity["id"])
+
+    IO.inspect(identity)
+
     user = identity |> BeatleaderLogin.get_user_by_identity()
 
     case user do

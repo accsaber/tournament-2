@@ -6,7 +6,7 @@ defmodule AccTournamentWeb.ApiUserJSON do
 
     %{
       display_name: user.display_name,
-      avatar_url: User.public_avatar_url(user) |> URI.to_string(),
+      avatar_url: User.public_avatar_url(user),
       slug: user.slug,
       qualifier_seed: -1
     }
