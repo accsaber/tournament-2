@@ -56,13 +56,13 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
           </.link>
         </:col>
         <:col :let={{_rank, attempt}} label="Score">
-          <%= attempt.score %>
+          <%= attempt.score |> Number.Delimit.number_to_delimited(precision: 0) %>
         </:col>
         <:col :let={{_rank, attempt}} label="Accuracy">
           <%= (attempt.score / @map.max_score * 100) |> :erlang.float_to_binary(decimals: 2) %>%
         </:col>
         <:col :let={{_rank, attempt}} label="Weight">
-          <%= attempt.weight |> :erlang.float_to_binary(decimals: 2) %>
+          <%= if(!is_nil(attempt.weight), do: attempt.weight |> :erlang.float_to_binary(decimals: 2)) %>
         </:col>
         <:action :let={{_rank, attempt}}>
           <.link navigate={~p"/profile/#{attempt.player.slug}"} class="text-sm font-semibold">

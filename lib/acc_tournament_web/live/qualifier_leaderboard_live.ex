@@ -65,7 +65,9 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
           </.link>
         </:col>
         <:col :let={{_rank, player}} label="Average Weight">
-          <%= player.average_weight |> :erlang.float_to_binary(decimals: 2) %>
+          <%= if(!is_nil(player.average_weight),
+            do: player.average_weight |> :erlang.float_to_binary(decimals: 2)
+          ) %>
         </:col>
         <:action :let={{_rank, player}}>
           <.link navigate={~p"/profile/#{player.slug}"} class="text-sm font-semibold">
