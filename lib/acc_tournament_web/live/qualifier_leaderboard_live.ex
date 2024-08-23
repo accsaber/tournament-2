@@ -10,7 +10,7 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
     <h1 class="relative max-w-screen-lg mx-auto text-4xl p-2 px-3 mt-8">Qualifiers</h1>
     <div class="flex relative max-w-screen-lg mx-auto p-2 gap-1 mb-2">
       <.link
-        patch={~p"/qualifiers"}
+        navigate={~p"/qualifiers"}
         class={
           [
             "rounded p-1.5 flex gap-1",
@@ -27,7 +27,7 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
 
       <.link
         :for={map <- @qualifier_pool.beat_maps}
-        patch={~p"/qualifiers/map_leaderboard/#{map.id}"}
+        navigate={~p"/qualifiers/map_leaderboard/#{map.id}"}
         class={
           [
             "rounded p-1.5",
@@ -55,7 +55,7 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
         </:col>
         <:col :let={{_rank, player}} label="Player">
           <.link
-            navigate={~p"/profile/#{player.slug}"}
+            navigate={"#{player}"}
             class="flex gap-2 items-center relative font-semibold underline"
           >
             <img src={User.public_avatar_url(player)} class="h-6 w-6 rounded-full absolute" />
@@ -70,7 +70,7 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
           ) %>
         </:col>
         <:action :let={{_rank, player}}>
-          <.link navigate={~p"/profile/#{player.slug}"} class="text-sm font-semibold">
+          <.link navigate={"#{player}"} class="text-sm font-semibold">
             Profile
           </.link>
         </:action>

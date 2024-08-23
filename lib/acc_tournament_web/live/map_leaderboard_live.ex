@@ -12,10 +12,12 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
 
   def render(assigns) do
     ~H"""
-    <img
-      src={BeatMap.cover_url(@map)}
-      class="absolute -top-8 left-0 w-full h-80 pointer-events-none object-cover gradient-transparent blur-xl opacity-70"
-    />
+    <div class="dots-container absolute inset-0 overflow-hidden -top-8 h-80">
+      <div class="absolute -inset-6 bottom-0 blur-[1.5rem]">
+        <img class="object-cover w-full h-full" src={BeatMap.cover_url(@map)} />
+      </div>
+      <div class="dots" />
+    </div>
     <.qualifier_header qualifier_pool={@qualifier_pool} current_route={{:map, @map.id}} />
     <div class="flex items-center gap-4 card relative max-w-screen-lg mx-auto  shadow-xl">
       <img src={BeatMap.cover_url(@map)} class="rounded-xl w-32 aspect-square" />
@@ -46,7 +48,7 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
         </:col>
         <:col :let={{_rank, attempt}} label="Player">
           <.link
-            navigate={~p"/profile/#{attempt.player.slug}"}
+            navigate={"#{attempt.player}"}
             class="flex gap-2 items-center relative font-semibold underline"
           >
             <img src={User.public_avatar_url(attempt.player)} class="h-6 w-6 rounded-full absolute" />
@@ -65,7 +67,7 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
           <%= if(!is_nil(attempt.weight), do: attempt.weight |> :erlang.float_to_binary(decimals: 2)) %>
         </:col>
         <:action :let={{_rank, attempt}}>
-          <.link navigate={~p"/profile/#{attempt.player.slug}"} class="text-sm font-semibold">
+          <.link navigate={"#{attempt.player}"} class="text-sm font-semibold">
             Profile
           </.link>
         </:action>

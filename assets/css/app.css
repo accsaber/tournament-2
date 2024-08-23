@@ -18,6 +18,7 @@ body {
   --champ: #f1c40f;
   --elder: #1abc9c;
   --god: #9b59b6;
+  --celestial: #6931b6;
 }
 
 ::backdrop {
@@ -213,6 +214,9 @@ tournament-header {
 }
 [data-highest-milestone="3"] {
   color: var(--god);
+}
+[data-highest-milestone="4"] {
+  color: var(--celestial);
 }
 
 /* forms */

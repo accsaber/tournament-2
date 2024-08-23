@@ -34,6 +34,19 @@ config :acc_tournament,
       "http://localhost:4000/auth/callback/beatleader"
 
 config :acc_tournament,
+       :discord_client_id,
+       System.get_env("DISCORD_CLIENT_ID") || "accsaber"
+
+config :acc_tournament,
+       :discord_client_secret,
+       System.get_env("DISCORD_CLIENT_SECRET")
+
+config :acc_tournament,
+       :discord_redirect_uri,
+       System.get_env("DISCORD_REDIRECT_URL") ||
+         "http://localhost:4000/auth/callback/discord"
+
+config :acc_tournament,
   uploads_dir:
     System.get_env("UPLOADS_DIR") || Application.app_dir(:acc_tournament, "priv/static/uploads/"),
   uploads_prefix: URI.parse(System.get_env("UPLOADS_PREFIX") || "/uploads/")

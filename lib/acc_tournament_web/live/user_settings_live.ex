@@ -1,4 +1,5 @@
 defmodule AccTournamentWeb.UserSettingsLive do
+  alias AccTournament.Accounts.Binding
   alias AccTournament.Repo
   alias AccTournament.Accounts.User
   use AccTournamentWeb, :live_view
@@ -179,6 +180,38 @@ defmodule AccTournamentWeb.UserSettingsLive do
       <% end %>
       <.button :if={@uploads.avatar.entries != []} type="submit">Upload</.button>
     </form>
+    <%= case @bindings |> Enum.filter(&(&1.service == :discord)) do %>
+      <% [] -> %>
+        <form
+          action="https://discord.com/oauth2/authorize"
+          class=" mx-auto mb-4 flex flex-col gap-2 not-prose"
+        >
+          <input
+            type="hidden"
+            name="client_id"
+            value={Application.fetch_env!(:acc_tournament, :discord_client_id)}
+          />
+          <input type="hidden" name="response_type" value="code" />
+          <input type="hidden" name="scope" value="identify" />
+          <input
+            type="hidden"
+            name="redirect_uri"
+            value={AccTournamentWeb.OAuthLoginController.discord_redirect_uri()}
+          />
+          <.button class="flex w-max gap-3 !rounded" type="submit">
+            <img src={~p"/images/discord.svg"} class="h-6 w-6 invert" />
+            <div class="mx-auto">
+              Link Discord
+            </div>
+          </.button>
+        </form>
+      <% _ -> %>
+        <div class="form-root mb-3">
+          <div class="bg-neutral-100 dark:bg-neutral-800 flex gap-4 w-max py-1.5 px-3 rounded items-center not-prose">
+            <img src={~p"/images/discord.svg"} class="h-6 w-6 dark:invert" /> Discord linked
+          </div>
+        </div>
+    <% end %>
     <.form
       for={@user_settings_form}
       phx-change="validate_user_settings"
@@ -226,9 +259,13 @@ defmodule AccTournamentWeb.UserSettingsLive do
 
   def mount(_, _, socket) do
     user = socket.assigns.current_user
+    import Ecto.Query, only: [where: 2]
+
+    bindings = Binding |> where(user_id: ^user.id) |> Repo.all()
 
     {:ok,
      socket
+     |> assign(bindings: bindings)
      |> allow_upload(:avatar,
        accept: ~w(.jpg .jpeg .png .webp),
        max_entries: 1,

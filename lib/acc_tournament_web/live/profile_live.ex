@@ -1,6 +1,7 @@
 defmodule AccTournamentWeb.ProfileLive do
   require Logger
   require Ecto.Query
+  alias AccTournament.Levels.BeatMap
   alias AccTournament.Accounts.User
   alias AccTournament.Repo
   use AccTournamentWeb, :live_view
@@ -17,6 +18,12 @@ defmodule AccTournamentWeb.ProfileLive do
     )
   end
 
+  defp campaign_icon(0), do: ~p"/images/campaign/mercenary.webp"
+  defp campaign_icon(1), do: ~p"/images/campaign/champ.webp"
+  defp campaign_icon(2), do: ~p"/images/campaign/elder.webp"
+  defp campaign_icon(3), do: ~p"/images/campaign/god.webp"
+  defp campaign_icon(4), do: ~p"/images/campaign/celestial.webp"
+
   def render(assigns) do
     ~H"""
     <div class="relative">
@@ -30,24 +37,30 @@ defmodule AccTournamentWeb.ProfileLive do
         </div>
         <div class="dots" />
       </div>
-      <div class="w-full max-w-screen-lg mx-auto relative p-8 py-20 flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
-        <div
-          class={[
-            "w-24 md:w-40 lg:w-[11.5rem] aspect-square relative rounded-xl",
-            "overflow-hidden shadow-xl flex items-center justify-center",
-            "text-neutral-300"
-          ]}
-          data-highest-milestone={@highest_milestone}
-        >
+      <div class="w-full max-w-screen-lg isolate mx-auto relative p-8 py-20 flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+        <%!-- dirty hack to reduce specificity --%>
+        <span class="text-neutral-300 dark:text-neutral-600">
           <img
-            class="absolute top-0 left-0 w-full h-full object-cover"
+            class={[
+              "w-24 md:w-40 lg:w-[11.5rem] aspect-square rounded-xl shadow-xl relative",
+              "border-4 border-current"
+            ]}
             src={User.public_avatar_url(@user)}
             srcSet={avatar_src_set(@user)}
+            data-highest-milestone={@highest_milestone}
           />
-        </div>
+        </span>
         <div class="flex flex-col flex-1 gap-3 relative">
           <div class="text-5xl flex gap-3 items-baseline flex-1 font-semibold flex-wrap">
-            <span data-highest-milestone={@highest_milestone}><%= @user.display_name %></span>
+            <%= case @highest_milestone do %>
+              <% nil -> %>
+                <.icon name="hero-cube-transparent" class="w-8 h-8 opacity-50 translate-y-0.5" />
+              <% _ -> %>
+                <img src={campaign_icon(@highest_milestone)} class="w-8 object-cover translate-y-0.5" />
+            <% end %>
+            <span data-highest-milestone={@highest_milestone}>
+              <%= @user.display_name %>
+            </span>
 
             <div class="bg-neutral-100 dark:bg-neutral-800 block text-xl relative bottom-1.5 px-2 rounded font-normal">
               <%= @user.pronouns %>
@@ -63,7 +76,11 @@ defmodule AccTournamentWeb.ProfileLive do
                 href={URI.merge(service.prefix, user_id |> Integer.to_string())}
                 class="bg-white dark:bg-neutral-800 shadow px-2.5 py-1.5 rounded flex flex-row gap-2 items-center"
               >
-                <img src={service.logo} alt={service.name} class="w-5 h-5 " />
+                <img
+                  src={service.logo}
+                  alt={service.name}
+                  class={["w-5 h-5", service[:invert] && "dark:invert"]}
+                />
                 <%= service.name %>
               </.link>
             <% end %>
@@ -71,10 +88,51 @@ defmodule AccTournamentWeb.ProfileLive do
         </div>
       </div>
     </div>
-    <main :if={assigns[:bio]} class="w-full max-w-screen-lg mx-auto px-8">
-      <div class="body prose lg:prose-lg prose-neutral dark:prose-invert max-w-none">
+    <main class="w-full max-w-screen-lg mx-auto px-8">
+      <div class="body prose lg:prose-lg prose-neutral dark:prose-invert max-w-none mb-16">
         <h2>Bio</h2>
         <%= raw(@bio) %>
+        <em :if={!@bio}>No bio </em>
+      </div>
+
+      <div
+        :if={length(@user.attempts) > 0}
+        class="body prose lg:prose-lg prose-neutral dark:prose-invert max-w-none"
+      >
+        <h2>Qualifier Scores</h2>
+      </div>
+
+      <div :if={length(@user.attempts) > 0} class="grid md:grid-cols-2 gap-4 mt-4">
+        <%= for attempt <- @user.attempts do %>
+          <.link
+            navigate={~p"/qualifiers/map_leaderboard/#{attempt.map_id}"}
+            class="rounded-xl bg-neutral-100 dark:bg-neutral-800 shadow p-6 flex flex-col gap-6 mb-12 overflow-hidden relative isolate"
+          >
+            <div class="flex flex-row gap-3">
+              <img
+                src={BeatMap.cover_url(attempt.map)}
+                class="w-24 h-24 absolute blur-2xl rounded-full -z-10 scale-150 dark:brightness-125 saturate-150 opacity-50 dark:opacity-100"
+              />
+              <img src={BeatMap.cover_url(attempt.map)} class="w-24 h-24 rounded" />
+              <div class="flex flex-col gap-1 justify-center text-xl">
+                <div class="text-xl font-semibold"><%= attempt.map.name %></div>
+                <div class="text-sm"><%= attempt.map.mapper %></div>
+                <div class="text-sm"><%= attempt.map.category.name %></div>
+              </div>
+            </div>
+            <div class="flex flex-row gap-3 justify-between">
+              <div class="text-3xl font-semibold">
+                <div :if={attempt.score} class="flex gap-2 items-center">
+                  <%= (attempt.score / attempt.map.max_score * 100)
+                  |> :erlang.float_to_binary(decimals: 2) %>%
+                </div>
+              </div>
+              <div :if={attempt.weight} class="text-3xl font-semibold">
+                <%= :erlang.float_to_binary(attempt.weight, decimals: 2) %>x
+              </div>
+            </div>
+          </.link>
+        <% end %>
       </div>
     </main>
     """
@@ -88,35 +146,44 @@ defmodule AccTournamentWeb.ProfileLive do
     {:ok, socket |> assign(show_container: false)}
   end
 
-  defp load_user(user_id) do
+  defp load_user() do
     import Ecto.Query, only: [from: 2, preload: 2]
 
     from(
       user in User,
-      where: user.id == ^user_id,
+      left_join: attempts in assoc(user, :attempts),
+      distinct: attempts.map_id,
+      order_by: [desc: attempts.score],
       preload: [
-        :account_bindings
+        :account_bindings,
+        attempts: {attempts, [map: [:category]]}
       ]
     )
   end
 
-  def handle_params(%{"id" => slug}, _, socket) do
-    import Ecto.Query, only: [from: 2]
+  def handle_params(%{"id" => slug} = p, _, socket) do
+    import Ecto.Query, only: [where: 2]
 
-    query =
-      from(
-        user in User,
-        where: user.slug == ^slug,
-        preload: [
-          :account_bindings
-        ]
-      )
-
-    user = Repo.one(query)
+    user =
+      load_user()
+      |> where(slug: ^slug)
+      |> Repo.one()
 
     if is_nil(user) do
       raise AccTournamentWeb.ProfileLive.UserNotFound
     end
+
+    sanitised_friendly_name = user.display_name |> String.replace(~r/[^a-zA-Z0-9-_.~]+/, "")
+
+    socket =
+      case p do
+        %{"friendly_name" => ^sanitised_friendly_name} ->
+          socket
+
+        _ ->
+          new_path = ~p"/profile/#{slug}/@#{sanitised_friendly_name}"
+          socket |> push_event("silent_new_url", %{to: new_path})
+      end
 
     bio_rendered = if(user.bio, do: user.bio |> Earmark.as_html!())
 
@@ -159,6 +226,12 @@ defmodule AccTournamentWeb.ProfileLive do
             name: "ScoreSaber",
             prefix: "https://scoresaber.com/u/",
             logo: ~p"/images/scoresaber.svg"
+          },
+          :discord => %{
+            name: "Discord",
+            prefix: "https://discord.com/users/",
+            logo: ~p"/images/discord.svg",
+            invert: true
           }
         },
         bio: bio_rendered
@@ -177,8 +250,10 @@ defmodule AccTournamentWeb.ProfileLive do
         {:user_updated, %{id: user_id} = _incoming_user},
         %{assigns: %{user: current_user}} = socket
       ) do
+    import Ecto.Query, only: [where: 2]
+
     if user_id == current_user.id do
-      user = load_user(user_id) |> Repo.one()
+      user = load_user() |> where(id: ^user_id) |> Repo.one()
 
       bio_rendered = if(user.bio, do: user.bio |> Earmark.as_html!())
 

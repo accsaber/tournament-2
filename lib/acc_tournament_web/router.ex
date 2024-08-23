@@ -37,6 +37,7 @@ defmodule AccTournamentWeb.Router do
       get "/health", HealthController, :index
 
       live "/profile/:id", ProfileLive, :view
+      live "/profile/:id/@:friendly_name", ProfileLive, :view
 
       scope "/qualifiers" do
         live "/", QualifierLeaderboardLive
@@ -121,10 +122,16 @@ defmodule AccTournamentWeb.Router do
     end
   end
 
-  scope "/auth", AccTournamentWeb do
+  scope "/auth/callback/discord", AccTournamentWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    get "/", OAuthLoginController, :discord
+  end
+
+  scope "/auth/callback/beatleader", AccTournamentWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
-    get "/callback/beatleader", OAuthLoginController, :beatleader
+    get "/", OAuthLoginController, :beatleader
   end
 
   scope "/", AccTournamentWeb do

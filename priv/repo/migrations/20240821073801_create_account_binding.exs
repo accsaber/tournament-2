@@ -11,5 +11,6 @@ defmodule AccTournament.Repo.Migrations.CreateAccountBinding do
     end
 
     create index(:account_binding, [:user_id])
+    create unique_index(:account_binding, [:service, :platform_id])
   end
 end

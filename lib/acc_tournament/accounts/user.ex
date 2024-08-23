@@ -19,6 +19,7 @@ defmodule AccTournament.Accounts.User do
     field :average_weight, :float
 
     has_many :account_bindings, AccTournament.Accounts.Binding
+    has_many :attempts, AccTournament.Qualifiers.Attempt, foreign_key: :player_id
 
     timestamps(type: :utc_datetime)
   end
@@ -270,5 +271,25 @@ defmodule AccTournament.Accounts.User do
 
   def public_avatar_url(%__MODULE__{email: email}, _size) do
     "https://accsaber.com/api/avatar/#{email |> :erlang.md5() |> Base.encode16() |> String.downcase()}?d=blank"
+  end
+
+  def sanitised_display_name(%AccTournament.Accounts.User{display_name: display_name}) do
+    sanitised_display_name(display_name)
+  end
+
+  def sanitised_display_name("" <> name) do
+    name |> String.replace(~r/[^a-zA-Z0-9-_.~]+/, "")
+  end
+end
+
+defimpl Phoenix.HTML.Safe, for: AccTournament.Accounts.User do
+  def to_iodata(user) do
+    String.Chars.to_string(user)
+  end
+end
+
+defimpl String.Chars, for: AccTournament.Accounts.User do
+  def to_string(%AccTournament.Accounts.User{display_name: display_name, slug: slug}) do
+    "/profile/#{slug}/@#{AccTournament.Accounts.User.sanitised_display_name(display_name)}"
   end
 end

@@ -63,6 +63,16 @@ spec:
                   key: superUserPassword
             - name: DATABASE_URL
               value: postgres://postgres:$(POSTGRES_PASSWORD)@postgres:5432/acc_tournament
+            - name: DISCORD_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: discord-oauth
+                  key: client_id
+            - name: DISCORD_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: discord-oauth
+                  key: client_secret
             - name: BEATLEADER_CLIENT_ID
               valueFrom:
                 secretKeyRef:

@@ -3,7 +3,7 @@ defmodule AccTournament.Accounts.Binding do
   import Ecto.Changeset
 
   schema "account_binding" do
-    field :service, Ecto.Enum, values: [:beatleader, :scoresaber]
+    field :service, Ecto.Enum, values: [:beatleader, :scoresaber, :discord]
     field :platform_id, :integer
     belongs_to :user, AccTournament.Accounts.User
 
@@ -13,7 +13,7 @@ defmodule AccTournament.Accounts.Binding do
   @doc false
   def changeset(binding, attrs) do
     binding
-    |> cast(attrs, [:service, :id])
-    |> validate_required([:service, :id])
+    |> cast(attrs, [:service, :platform_id, :user_id])
+    |> validate_required([:service, :platform_id, :user_id])
   end
 end
