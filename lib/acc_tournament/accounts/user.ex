@@ -11,7 +11,10 @@ defmodule AccTournament.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
-    field :roles, {:array, :string}, default: []
+
+    field :roles, {:array, Ecto.Enum},
+      default: [],
+      values: [:staff, :player, :coordinator, :map_pooler, :caster]
 
     field :pronouns, :string
     field :headset, :string

@@ -265,6 +265,29 @@ defmodule AccTournamentWeb.UserAuth do
     end
   end
 
+  def show_unauthorised_message(conn) do
+    conn
+    |> put_flash(:error, "You're not authorised to view this page.")
+    |> maybe_store_return_to()
+    |> redirect(to: ~p"/users/log_in")
+    |> halt()
+  end
+
+  def require_admin_user(conn, _opts) do
+    if conn.assigns[:current_user] do
+      user = conn.assigns[:current_user]
+
+      if user.roles |> Enum.member?(:staff) do
+        conn
+      else
+        conn |> show_unauthorised_message()
+      end
+    else
+      conn
+      |> show_unauthorised_message()
+    end
+  end
+
   defp put_token_in_session(conn, token) do
     conn
     |> put_session(:user_token, token)

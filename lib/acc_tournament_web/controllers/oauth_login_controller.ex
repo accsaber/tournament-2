@@ -110,8 +110,6 @@ defmodule AccTournamentWeb.OAuthLoginController do
       _ ->
         user = identity |> BeatleaderLogin.get_user_by_identity()
 
-        raise "fuck"
-
         case user do
           nil ->
             conn

@@ -28,6 +28,16 @@ defmodule AccTournamentWeb.Router do
     plug :require_authenticated_user, redirect: false
   end
 
+  live_session(:admin, on_mount: {AccTournamentWeb.UserAuth, :mount_current_user}) do
+    scope "/", AccTournamentWeb do
+      pipe_through [:browser, :require_admin_user]
+
+      live "/rules/new", RulebookAdminLive, :new
+      live "/rules/new/:slug", RulebookAdminLive, :new
+      live "/rules/:slug/edit", RulebookAdminLive, :edit
+    end
+  end
+
   live_session(:default, on_mount: {AccTournamentWeb.UserAuth, :mount_current_user}) do
     scope "/", AccTournamentWeb do
       pipe_through :browser
@@ -35,6 +45,9 @@ defmodule AccTournamentWeb.Router do
       get "/", PageController, :home
 
       get "/health", HealthController, :index
+
+      live "/rules", RulebookLive, :show
+      live "/rules/:slug", RulebookLive, :show
 
       live "/profile/:id", ProfileLive, :view
       live "/profile/:id/@:friendly_name", ProfileLive, :view
@@ -93,8 +106,6 @@ defmodule AccTournamentWeb.Router do
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
-
-  ## Authentication routes
 
   scope "/", AccTournamentWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
