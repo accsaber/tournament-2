@@ -115,11 +115,15 @@ defmodule AccTournamentWeb.OAuthLoginController do
     |> Repo.insert!(on_conflict: :nothing)
 
     conn
+    |> put_flash(:info, "Discord account linked successfully")
     |> redirect(to: ~p"/users/settings")
   end
 
-  def discord(_conn, _params) do
-    raise AccTournamentWeb.OAuthLoginController.MissingParams
+  def discord(conn, _params) do
+    {:ok,
+     conn
+     |> put_flash(:error, "Discord linking was cancelled")
+     |> redirect(to: ~p"/users/settings")}
   end
 end
 
