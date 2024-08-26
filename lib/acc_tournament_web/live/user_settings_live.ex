@@ -3,10 +3,79 @@ defmodule AccTournamentWeb.UserSettingsLive do
   alias AccTournament.Repo
   alias AccTournament.Accounts.User
   use AccTournamentWeb, :live_view
-  require Ecto.Query
+  import Ecto.Query, only: [from: 2]
 
   defp broadcast_update(user) do
     Phoenix.PubSub.broadcast(AccTournament.PubSub, "user_profile", {:user_updated, user})
+  end
+
+  attr :service, :atom, required: true
+  attr :bindings, :list, required: true
+  attr :icon, :string, required: true
+  attr :label, :string, required: true
+  attr :client_id, :string, required: true
+  attr :auth_url, :string, required: true
+  attr :scopes, :string, default: nil
+
+  defp link_button(assigns) do
+    ~H"""
+    <%= case @bindings |> Enum.filter(&(&1.service == @service)) do %>
+      <% [] -> %>
+        <a
+          href={
+            URI.append_query(
+              URI.parse(assigns.auth_url),
+              URI.encode_query(%{
+                "client_id" => assigns.client_id,
+                "response_type" => "code",
+                "redirect_uri" => AccTournamentWeb.OAuthLoginController.redirect_uri(assigns.service),
+                "scope" => assigns.scopes
+              })
+            )
+          }
+          class="rounded bg-blue-600 hover:bg-blue-500 text-white flex gap-2 items-center py-2 px-3 shadow"
+        >
+          <img src={@icon} class="h-6 w-6 invert  brightness-0" />
+          <div>Link <%= @label %></div>
+        </a>
+      <% [binding | _] -> %>
+        <div class="bg-neutral-100 dark:bg-neutral-800 flex gap-2 w-max py-1.5 px-3 rounded items-center not-prose">
+          <img src={@icon} class="h-6 w-6 brightness-0 dark:invert" />
+          <%= if binding.username do %>
+            <div><%= binding.username %></div>
+          <% else %>
+            <div>Linked</div>
+          <% end %>
+          <button
+            phx-click="delete_binding"
+            value={binding.id}
+            class="text-neutral-600 dark:text-neutral-400 hover:text-red-600 dark:hover:text-red-400 m-0 flex ml-1"
+          >
+            <.icon name="hero-x-mark" class="h-4 w-4" />
+          </button>
+        </div>
+    <% end %>
+    """
+  end
+
+  def handle_event("delete_binding", %{"value" => binding_id}, socket) do
+    current_user = socket.assigns.current_user.id
+    {binding_id, _} = binding_id |> Integer.parse()
+
+    from(b in Binding, where: b.id == ^binding_id, where: b.user_id == ^current_user)
+    |> Repo.one()
+    |> case do
+      nil ->
+        {:noreply, socket |> put_flash(:error, "Binding not found")}
+
+      binding ->
+        {:ok, _} = Repo.delete(binding)
+
+        {:noreply,
+         socket
+         |> assign(bindings: Repo.all(from(b in Binding, where: b.user_id == ^current_user)))
+         |> put_flash(:info, "Account unlinked")}
+    end
   end
 
   def handle_event("validate_user_settings", %{"user" => new_user}, socket) do
@@ -180,38 +249,35 @@ defmodule AccTournamentWeb.UserSettingsLive do
       <% end %>
       <.button :if={@uploads.avatar.entries != []} type="submit">Upload</.button>
     </form>
-    <%= case @bindings |> Enum.filter(&(&1.service == :discord)) do %>
-      <% [] -> %>
-        <form
-          action="https://discord.com/oauth2/authorize"
-          class=" mx-auto mb-4 flex flex-col gap-2 not-prose"
-        >
-          <input
-            type="hidden"
-            name="client_id"
-            value={Application.fetch_env!(:acc_tournament, :discord_client_id)}
-          />
-          <input type="hidden" name="response_type" value="code" />
-          <input type="hidden" name="scope" value="identify" />
-          <input
-            type="hidden"
-            name="redirect_uri"
-            value={AccTournamentWeb.OAuthLoginController.discord_redirect_uri()}
-          />
-          <.button class="flex w-max gap-3 !rounded" type="submit">
-            <img src={~p"/images/discord.svg"} class="h-6 w-6 invert" />
-            <div class="mx-auto">
-              Link Discord
-            </div>
-          </.button>
-        </form>
-      <% _ -> %>
-        <div class="form-root mb-3">
-          <div class="bg-neutral-100 dark:bg-neutral-800 flex gap-4 w-max py-1.5 px-3 rounded items-center not-prose">
-            <img src={~p"/images/discord.svg"} class="h-6 w-6 dark:invert" /> Discord linked
-          </div>
-        </div>
-    <% end %>
+    <div class="flex gap-2 flex-wrap max-w-[65ch] mx-auto my-4">
+      <.link_button
+        :if={!(@current_user.email |> String.ends_with?("@beatleader"))}
+        bindings={@bindings}
+        icon={~p"/images/beatleader.svg"}
+        label="BeatLeader"
+        service={:beatleader}
+        client_id={Application.fetch_env!(:acc_tournament, :beatleader_client_id)}
+        auth_url="https://api.beatleader.xyz/oauth2/authorize"
+        scopes="profile"
+      />
+      <.link_button
+        bindings={@bindings}
+        icon={~p"/images/discord.svg"}
+        label="Discord"
+        service={:discord}
+        client_id={Application.fetch_env!(:acc_tournament, :discord_client_id)}
+        auth_url="https://discord.com/oauth2/authorize"
+        scopes="identify"
+      />
+      <.link_button
+        bindings={@bindings}
+        icon={~p"/images/twitch.svg"}
+        label="Twitch"
+        service={:twitch}
+        client_id={Application.fetch_env!(:acc_tournament, :twitch_client_id)}
+        auth_url="https://id.twitch.tv/oauth2/authorize"
+      />
+    </div>
     <.form
       for={@user_settings_form}
       phx-change="validate_user_settings"

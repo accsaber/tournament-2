@@ -29,9 +29,10 @@ config :acc_tournament,
        System.get_env("BEATLEADER_CLIENT_SECRET")
 
 config :acc_tournament,
-  beatleader_redirect_uri:
-    System.get_env("BEATLEADER_REDIRECT_URL") ||
-      "http://localhost:4000/auth/callback/beatleader"
+  redirect_url_prefix:
+    (System.get_env("REDIRECT_URL_PREFIX") ||
+       "http://localhost:4000/auth/callback/")
+    |> URI.parse()
 
 config :acc_tournament,
        :discord_client_id,
@@ -42,9 +43,12 @@ config :acc_tournament,
        System.get_env("DISCORD_CLIENT_SECRET")
 
 config :acc_tournament,
-       :discord_redirect_uri,
-       System.get_env("DISCORD_REDIRECT_URL") ||
-         "http://localhost:4000/auth/callback/discord"
+       :twitch_client_id,
+       System.get_env("TWITCH_CLIENT_ID")
+
+config :acc_tournament,
+       :twitch_client_secret,
+       System.get_env("TWITCH_CLIENT_SECRET")
 
 config :acc_tournament,
   uploads_dir:

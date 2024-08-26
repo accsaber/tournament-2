@@ -21,7 +21,7 @@ defmodule AccTournamentWeb.UserLoginLive do
         <input
           type="hidden"
           name="redirect_uri"
-          value={AccTournamentWeb.OAuthLoginController.beatleader_redirect_uri()}
+          value={AccTournamentWeb.OAuthLoginController.redirect_uri(:beatleader)}
         />
         <.button class="w-full bg-neutral-200 dark:text-white text-neutral-800 dark:bg-neutral-900 flex justify-between">
           <img src={~p"/images/beatleader.svg"} class="h-6 w-6" />

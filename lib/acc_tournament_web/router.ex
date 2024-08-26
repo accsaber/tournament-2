@@ -122,16 +122,16 @@ defmodule AccTournamentWeb.Router do
     end
   end
 
-  scope "/auth/callback/discord", AccTournamentWeb do
-    pipe_through [:browser, :require_authenticated_user]
-
-    get "/", OAuthLoginController, :discord
+  scope "/auth/callback/", AccTournamentWeb do
+    pipe_through [:browser]
+    get "/beatleader", OAuthLoginController, :beatleader
   end
 
-  scope "/auth/callback/beatleader", AccTournamentWeb do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
+  scope "/auth/callback/", AccTournamentWeb do
+    pipe_through [:browser, :require_authenticated_user]
 
-    get "/", OAuthLoginController, :beatleader
+    get "/discord", OAuthLoginController, :discord
+    get "/twitch", OAuthLoginController, :twitch
   end
 
   scope "/", AccTournamentWeb do

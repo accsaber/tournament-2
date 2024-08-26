@@ -68,20 +68,26 @@ defmodule AccTournamentWeb.ProfileLive do
           </div>
           <div class="text-3xl"><%= @user.headset %></div>
           <div class="flex flex-wrap gap-1.5 items-start">
-            <%= for %{service: service_id, platform_id: user_id} <- @user.account_bindings do %>
-              <% service = @service_links[service_id] %>
+            <%= for binding <- @user.account_bindings do %>
+              <% service = @service_links[binding.service] %>
+              <% field = service[:field] || :platform_id %>
               <.link
-                :if={@service_links[service_id]}
+                :if={@service_links[binding.service]}
                 title={service.name}
-                href={URI.merge(service.prefix, user_id |> Integer.to_string())}
-                class="bg-white dark:bg-neutral-800 shadow px-2.5 py-1.5 rounded flex flex-row gap-2 items-center"
+                href={
+                  URI.merge(
+                    service.prefix,
+                    binding |> Map.get(field) |> String.Chars.to_string()
+                  )
+                }
+                class="bg-white hover:bg-neutral-50 dark:hover:bg-neutral-700 dark:bg-neutral-800 shadow sm:px-2.5 p-1.5 rounded flex flex-row gap-2 items-center"
               >
                 <img
                   src={service.logo}
                   alt={service.name}
                   class={["w-5 h-5", service[:invert] && "dark:invert"]}
                 />
-                <%= service.name %>
+                <div class="hidden sm:block"><%= service.name %></div>
               </.link>
             <% end %>
           </div>
@@ -106,12 +112,12 @@ defmodule AccTournamentWeb.ProfileLive do
         <%= for attempt <- @user.attempts do %>
           <.link
             navigate={~p"/qualifiers/map_leaderboard/#{attempt.map_id}"}
-            class="rounded-xl bg-neutral-100 dark:bg-neutral-800 shadow p-6 flex flex-col gap-6 mb-12 overflow-hidden relative isolate"
+            class="rounded-xl bg-white dark:bg-neutral-800 shadow p-6 flex flex-col gap-6 mb-12 overflow-hidden relative isolate"
           >
             <div class="flex flex-row gap-3">
               <img
                 src={BeatMap.cover_url(attempt.map)}
-                class="w-24 h-24 absolute blur-2xl rounded-full -z-10 scale-150 dark:brightness-125 saturate-150 opacity-50 dark:opacity-100"
+                class="w-24 h-24 absolute blur-2xl rounded-full -z-10 scale-150 brightness-125 saturate-150 opacity-50 dark:opacity-100"
               />
               <img src={BeatMap.cover_url(attempt.map)} class="w-24 h-24 rounded" />
               <div class="flex flex-col gap-1 justify-center text-xl">
@@ -230,8 +236,13 @@ defmodule AccTournamentWeb.ProfileLive do
           :discord => %{
             name: "Discord",
             prefix: "https://discord.com/users/",
-            logo: ~p"/images/discord.svg",
-            invert: true
+            logo: ~p"/images/discord.svg"
+          },
+          :twitch => %{
+            name: "Twitch",
+            prefix: "https://twitch.tv/",
+            field: :username,
+            logo: ~p"/images/twitch.svg"
           }
         },
         bio: bio_rendered

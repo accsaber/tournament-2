@@ -83,6 +83,16 @@ spec:
                 secretKeyRef:
                   name: beatleader-oauth
                   key: client_secret
+            - name: TWITCH_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: twitch-oauth
+                  key: client_id
+            - name: TWITCH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: twitch-oauth
+                  key: client_secret
           livenessProbe:
             failureThreshold: 3
             httpGet:
