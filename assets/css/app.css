@@ -228,7 +228,7 @@ tournament-header {
 /* forms */
 form,
 .form-root {
-  @apply prose dark:prose-invert mx-auto flex flex-col gap-6;
+  @apply flex flex-col gap-6;
 
   & label {
     @apply gap-1.5 text-neutral-800 dark:text-neutral-300;

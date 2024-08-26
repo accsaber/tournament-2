@@ -39,7 +39,7 @@ defmodule AccTournamentWeb.UserSettingsLive do
           <div>Link <%= @label %></div>
         </a>
       <% [binding | _] -> %>
-        <div class="bg-neutral-100 dark:bg-neutral-800 flex gap-2 w-max py-1.5 px-3 rounded items-center not-prose">
+        <div class="bg-neutral-100 dark:bg-neutral-800 flex gap-2 w-max py-2 px-3 rounded items-center not-prose">
           <img src={@icon} class="h-6 w-6 brightness-0 dark:invert" />
           <%= if binding.username do %>
             <div><%= binding.username %></div>
@@ -225,7 +225,7 @@ defmodule AccTournamentWeb.UserSettingsLive do
     <form
       phx-submit="save_avatar"
       phx-change="validate_avatar"
-      class="mb-4 not-prose"
+      class="mb-4 not-prose w-full"
       phx-drop-target={@uploads.avatar.ref}
     >
       <.header>Update avatar</.header>
@@ -249,7 +249,10 @@ defmodule AccTournamentWeb.UserSettingsLive do
       <% end %>
       <.button :if={@uploads.avatar.entries != []} type="submit">Upload</.button>
     </form>
-    <div class="flex gap-2 flex-wrap max-w-[65ch] mx-auto my-4">
+    <h2 class="block text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-0.5">
+      Linked accounts
+    </h2>
+    <div class="flex gap-2 flex-wrap mb-4">
       <.link_button
         :if={!(@current_user.email |> String.ends_with?("@beatleader"))}
         bindings={@bindings}
