@@ -10,6 +10,42 @@
       <%= @inner_content %>
     </div>
   <% else %>
-    <%= @inner_content %>
+    <div><%= @inner_content %></div>
   <% end %>
 </div>
+
+<footer class="mt-auto bg-neutral-100 dark:bg-neutral-800 ">
+  <div class="flex gap-4 w-full max-w-screen-lg mx-auto p-8 items-center">
+    <img
+      src={~p"/images/logo.webp"}
+      alt="Acc Champ Community"
+      height="32"
+      width="32"
+      class="w-8 h-8 aspect-square relative transition-transform "
+    />
+    <div class="w-px h-12 bg-neutral-300 dark:bg-neutral-700" />
+    <% button_class =
+      "w-6 h-6 mx-0.5 saturate-0 brightness-0 opacity-75 dark:invert dark:hover:invert-0 hover:brightness-100 hover:saturate-100 hover:opacity-100 transition-all" %>
+    <a href="https://discord.gg/5uPBwckvVZ">
+      <img
+        src={~p"/images/discord.svg"}
+        alt="Discord"
+        height="32"
+        width="32"
+        class={button_class}
+      />
+    </a>
+    <a href="https://www.twitch.tv/accchampcommunity">
+      <img src={~p"/images/twitch.svg"} alt="Twitch" height="32" width="32" class={button_class} />
+    </a>
+    <a href="https://beatleader.xyz/clan/ACC">
+      <img
+        src={~p"/images/beatleader.svg"}
+        alt="BeatLeader Clan"
+        height="32"
+        width="32"
+        class={button_class}
+      />
+    </a>
+  </div>
+</footer>
