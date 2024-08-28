@@ -1,0 +1,67 @@
+.card {
+  @apply p-8 rounded shadow bg-white dark:bg-neutral-800;
+}
+
+.country-badge {
+  @apply bg-neutral-100 px-3 py-1.5 rounded flex flex-row gap-2 items-center h-9;
+
+  &.unknown {
+    @apply text-gray-500 text-sm gap-1.5;
+  }
+}
+
+.fade-out-right {
+  mask-image: linear-gradient(to right, #fff, #0000);
+}
+
+.dots-container {
+  mask-image: linear-gradient(to bottom, #fff2, #0000);
+
+  & .splashbg {
+    @apply w-full h-full object-cover;
+    transition-property: filter;
+    transition-duration: 1000ms;
+    transition-delay: 250ms;
+  }
+
+  & .dots {
+    @apply text-black dark:text-white;
+    pointer-events: none;
+    background-image: radial-gradient(currentcolor 2px, transparent 2px);
+    background-size: 2rem 2rem;
+    background-position: left calc(50% + 528px) top 50%;
+    mix-blend-mode: overlay;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    @media (max-width: 1024px) {
+      background-position: left 0 top 50%;
+    }
+  }
+}
+
+.gradient-transparent {
+  mask-image: linear-gradient(#fff, transparent);
+}
+
+[data-highest-milestone="-1"] {
+  color: var(--rookie);
+}
+[data-highest-milestone="0"] {
+  color: var(--mercenary);
+}
+[data-highest-milestone="1"] {
+  color: var(--champ);
+}
+[data-highest-milestone="2"] {
+  color: var(--elder);
+}
+[data-highest-milestone="3"] {
+  color: var(--god);
+}
+[data-highest-milestone="4"] {
+  color: var(--celestial);
+}

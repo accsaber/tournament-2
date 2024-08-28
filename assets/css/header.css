@@ -1,0 +1,83 @@
+#page-header {
+  & .profile-button,
+  & .login {
+    position: relative;
+    @apply h-10 bg-black/10 rounded hover:bg-black/20 flex items-center justify-center;
+    & .avatar {
+      aspect-ratio: 1/1;
+      @apply w-10 h-10 overflow-hidden relative rounded flex items-center justify-center;
+    }
+
+    & .avatar img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    & .username,
+    & .label {
+      @apply py-3 p-4 hidden md:block;
+    }
+  }
+  & .user-cutout {
+    mask-image: url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2022%2040%22%3E%3Cpath%20d=%22M1-1a10%2010%200%200%201%200%2042l199-1V0%22/%3E%3C/svg%3E),
+      linear-gradient(white, white);
+    --spread: theme(spacing.1);
+    mask-position: 0 0, 1.375rem 0;
+    mask-size: auto theme(spacing.10), 100% 100%;
+    mask-repeat: no-repeat;
+  }
+}
+
+tournament-header {
+  position: sticky;
+  display: block;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+
+  & .menu-toggle {
+    @apply w-6 h-6 flex;
+
+    & :global(svg) {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  & .container {
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    @apply max-w-screen-lg gap-4 px-4 justify-between sm:justify-normal;
+  }
+
+  & nav {
+    @apply hidden sm:flex;
+  }
+
+  & .logo {
+    @apply w-12 h-12 aspect-square p-2 hidden sm:flex -mr-2  object-contain;
+    @apply hover:bg-black/5 dark:hover:bg-black/10 items-center gap-2 font-semibold transition-all;
+  }
+
+  &:not(:state(scrolled)) .logo {
+    @apply -mr-16 pointer-events-none opacity-0;
+  }
+
+  & .logo-separator {
+    @apply transition-all w-px h-10 bg-black/10 dark:bg-white/5 mx-0 -ml-1 hidden sm:flex;
+  }
+
+  &:not(:state(scrolled)) .logo-separator {
+    @apply opacity-0 -mx-2;
+  }
+
+  @apply bg-white text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200 transition-colors shadow;
+
+  &:state(scrolled) {
+    z-index: 40;
+  }
+}

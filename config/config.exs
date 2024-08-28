@@ -41,14 +41,10 @@ config :esbuild,
   ]
 
 # Configure tailwind (the version is required)
-config :tailwind,
-  version: "3.4.0",
-  acc_tournament: [
-    args: ~w(
-      --config=tailwind.config.js
-      --input=css/app.css
-      --output=../priv/static/assets/app.css
-    ),
+
+config :ex_postcss,
+  default: [
+    args: ~w(css/app.css -o ../priv/static/assets/app.css --config ./postcss.config.js),
     cd: Path.expand("../assets", __DIR__)
   ]
 

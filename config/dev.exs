@@ -26,7 +26,7 @@ config :acc_tournament, AccTournamentWeb.Endpoint,
   secret_key_base: "2uYa9MRh/dczDYUIw/ruu2lQyDJZ8xJtPUWZkV7T8Xwd+2lSrFYsnyG/OZs0Iugd",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:acc_tournament, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:acc_tournament, ~w(--watch)]}
+    postcss: {ExPostcss, :run, [:default, ~w(--watch)]}
   ]
 
 config :acc_tournament, beatleader_redirect_uri: "http://localhost:4000/auth/callback/beatleader"

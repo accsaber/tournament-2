@@ -1,0 +1,46 @@
+form,
+.form-root {
+  @apply flex flex-col gap-6;
+
+  & label {
+    @apply gap-1.5 text-neutral-800 dark:text-neutral-300;
+  }
+
+  & input[type="text"],
+  & input[type="email"],
+  & input[type="password"],
+  & textarea:not(input),
+  & select:not(input),
+  & .field {
+    @apply block rounded bg-white dark:bg-neutral-800 shadow border-neutral-300 dark:border-neutral-600 m-0;
+  }
+
+  textarea {
+    field-sizing: content;
+  }
+
+  & input[type="checkbox"] {
+    @apply block rounded  shadow border-neutral-300 dark:border-neutral-600;
+  }
+
+  & kbd {
+    @apply bg-neutral-100 dark:bg-neutral-800 rounded px-1 whitespace-pre;
+  }
+
+  & .error {
+    @apply shadow bg-red-100 dark:bg-red-900 px-3 py-2 rounded;
+  }
+
+  & button[type="submit"],
+  & button[type="button"] {
+    @apply px-3 py-1.5 bg-blue-600 text-white rounded shadow;
+  }
+
+  & .message {
+    @apply bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-white px-4 py-2 rounded-lg;
+
+    &.error {
+      @apply bg-red-100 dark:bg-red-900 text-red-900 dark:text-white;
+    }
+  }
+}
