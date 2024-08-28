@@ -45,3 +45,4 @@ npm-debug.log
 # MacOS Resource forks
 .DS_Store
 
+.elixir_ls

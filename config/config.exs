@@ -68,3 +68,6 @@ import_config "#{config_env()}.exs"
 config :acc_tournament, Oban,
   repo: AccTournament.Repo,
   queues: [default: 5]
+
+config :libcluster,
+  topologies: []
