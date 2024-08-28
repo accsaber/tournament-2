@@ -30,3 +30,11 @@ spec:
         - path:
             type: PathPrefix
             value: /
+    - backendRefs:
+        - kind: Service
+          name: plausible
+          port: 80
+      matches:
+        - path:
+            type: Exact
+            value: /api/event

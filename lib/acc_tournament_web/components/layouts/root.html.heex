@@ -8,14 +8,7 @@
       <%= assigns[:page_title] || "Acc Tournament" %>
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
-    <script defer phx-track-static type="module" src={~p"/assets/socket.js"} />
     <script phx-track-static type="module" src={~p"/assets/app.js"} />
-    <script
-      :if={Mix.env() == :prod}
-      defer
-      data-domain="tournament.accsaber.com"
-      src="https://plausible.accsaber.com/js/script.js"
-    />
   </head>
   <body class="antialiased">
     <%= @inner_content %>

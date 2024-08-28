@@ -35,7 +35,7 @@ config :esbuild,
   version: "0.17.11",
   acc_tournament: [
     args:
-      ~w(js/socket.ts js/app.ts --bundle --splitting --target=es2020 --format=esm --outdir=../priv/static/assets --external:/fonts/* --external:/images/* --analyze),
+      ~w(js/app.ts --bundle --splitting --target=es2020 --format=esm --outdir=../priv/static/assets --external:/fonts/* --external:/images/* --analyze),
     cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
   ]
@@ -43,7 +43,7 @@ config :esbuild,
 # Configure tailwind (the version is required)
 
 config :ex_postcss,
-  default: [
+  acc_tournament: [
     args: ~w(css/app.css -o ../priv/static/assets/app.css --config ./postcss.config.js),
     cd: Path.expand("../assets", __DIR__)
   ]

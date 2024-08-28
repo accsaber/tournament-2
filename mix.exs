@@ -82,13 +82,15 @@ defmodule AccTournament.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": [
-        "tailwind.install --if-missing",
         "esbuild.install --if-missing",
         "cmd npm ci --prefix assets"
       ],
-      "assets.build": ["tailwind acc_tournament", "esbuild acc_tournament"],
+      "assets.build": [
+        "postcss acc_tournament",
+        "esbuild acc_tournament"
+      ],
       "assets.deploy": [
-        "tailwind acc_tournament --minify",
+        "postcss acc_tournament --env production",
         "esbuild acc_tournament --minify",
         "phx.digest"
       ]
