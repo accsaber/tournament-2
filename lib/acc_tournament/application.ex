@@ -10,8 +10,9 @@ defmodule AccTournament.Application do
     children = [
       AccTournamentWeb.Telemetry,
       AccTournament.Repo,
+      {Cluster.Supervisor,
+       [Application.get_env(:libcluster, :topologies), [name: AccTournament.ClusterSupervisor]]},
       {Oban, Application.fetch_env!(:acc_tournament, Oban)},
-      {DNSCluster, query: Application.get_env(:acc_tournament, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: AccTournament.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: AccTournament.Finch},

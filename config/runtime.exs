@@ -130,8 +130,6 @@ if config_env() == :prod do
   # We also recommend setting `force_ssl` in your config/prod.exs,
   # ensuring no data is ever sent via http, always redirecting to https:
   #
-  #     config :acc_tournament, AccTournamentWeb.Endpoint,
-  #       force_ssl: [hsts: true]
   #
   # Check `Plug.SSL` for all available options in `force_ssl`.
 
@@ -150,6 +148,20 @@ if config_env() == :prod do
     adapter: Swoosh.Adapters.Sendgrid,
     api_key: System.get_env("SENDGRID_API_KEY"),
     domain: System.get_env("SENDGRID_DOMAIN")
+
+  config :libcluster,
+    topologies: [
+      erlang_nodes_in_k8s: [
+        strategy: Elixir.Cluster.Strategy.Kubernetes,
+        config: [
+          mode: :dns,
+          kubernetes_node_basename: System.get_env("RELEASE_NAME") || "acc_tournament",
+          kubernetes_selector: "app=tournament-website",
+          kubernetes_namespace: "default",
+          polling_interval: 5_000
+        ]
+      ]
+    ]
 
   # For this example you need include a HTTP client required by Swoosh API client.
   # Swoosh supports Hackney and Finch out of the box:

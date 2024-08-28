@@ -10,5 +10,9 @@ spec:
       port: 80
       protocol: TCP
       targetPort: web
+    - name: epmd
+      port: 4369
+      protocol: TCP
+      targetPort: epmd
   selector:
     app: tournament-website

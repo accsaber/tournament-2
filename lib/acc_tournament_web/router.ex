@@ -28,14 +28,18 @@ defmodule AccTournamentWeb.Router do
     plug :require_authenticated_user, redirect: false
   end
 
-  live_session(:admin, on_mount: {AccTournamentWeb.UserAuth, :mount_current_user}) do
-    scope "/", AccTournamentWeb do
-      pipe_through [:browser, :require_admin_user]
+  import Phoenix.LiveDashboard.Router
 
+  scope "/", AccTournamentWeb do
+    pipe_through [:browser, :require_admin_user]
+
+    live_session(:admin, on_mount: {AccTournamentWeb.UserAuth, :mount_current_user}) do
       live "/rules/new", RulebookAdminLive, :new
       live "/rules/new/:slug", RulebookAdminLive, :new
       live "/rules/:slug/edit", RulebookAdminLive, :edit
     end
+
+    live_dashboard "/admin/dashboard", metrics: AccTournamentWeb.Telemetry
   end
 
   live_session(:default, on_mount: {AccTournamentWeb.UserAuth, :mount_current_user}) do
@@ -97,12 +101,10 @@ defmodule AccTournamentWeb.Router do
     # If your application does not have an admins-only section yet,
     # you can use Plug.BasicAuth to set up some basic authentication
     # as long as you are also using SSL (which you should anyway).
-    import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
       pipe_through :browser
 
-      live_dashboard "/dashboard", metrics: AccTournamentWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
