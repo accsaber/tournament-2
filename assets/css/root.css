@@ -6,6 +6,8 @@ body {
   margin: 0;
   @apply dark:bg-neutral-900 text-black dark:text-neutral-200;
   color-scheme: light dark;
+  display: flex;
+  flex-direction: column;
 }
 
 [data-phx-main] {
