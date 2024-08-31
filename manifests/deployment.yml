@@ -55,6 +55,8 @@ spec:
           envFrom:
             - secretRef:
                 name: acc-tournament-secret
+            - secretRef:
+                name: imgproxy-secret
             - configMapRef:
                 name: acc-tournament-config
           env:
@@ -142,5 +144,5 @@ spec:
           persistentVolumeClaim:
             claimName: accsaber-media
         - name: certs
-          secret: 
+          secret:
             secretName: tournament-accsaber-com-tls

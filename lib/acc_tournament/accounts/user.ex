@@ -260,7 +260,7 @@ defmodule AccTournament.Accounts.User do
   def ingame_avatar_url(%__MODULE__{avatar_url: avatar}), do: ingame_avatar_url(avatar)
 
   def ingame_avatar_url("upload:" <> path),
-    do: ingame_avatar_url("http://accsaber-media/tournament/" <> path <> ".webp")
+    do: ingame_avatar_url("local:///tournament/" <> path <> ".webp")
 
   def ingame_avatar_url(path) do
     Application.fetch_env!(:imgproxy, :prefix) <> "s:64:64/" <> Base.encode64(path) <> ".jpg"
