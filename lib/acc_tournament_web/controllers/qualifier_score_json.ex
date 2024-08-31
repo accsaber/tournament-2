@@ -32,7 +32,7 @@ defmodule AccTournamentWeb.QualifierScoreJSON do
             rank: rank,
             username: attempt.player.display_name,
             weight: attempt.weight || 15,
-            avatar_url: User.public_avatar_url(attempt.player),
+            avatar_url: User.ingame_avatar_url(attempt.player),
             score: attempt.score
           }
         )
