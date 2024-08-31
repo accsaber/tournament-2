@@ -40,6 +40,7 @@ npm-debug.log
 
 # Deploy secrets
 *.env
+.envrc
 !/manifests/config.env
 
 # MacOS Resource forks
