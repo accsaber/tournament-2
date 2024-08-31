@@ -156,7 +156,17 @@ defmodule AccTournamentWeb.UserSettingsLive do
               suffix
             end)
           )
-          |> Enum.map(&Task.await(&1))
+          |> Task.await_many()
+
+        Image.open!(binary)
+        |> Image.thumbnail!(64, crop: :center)
+        |> Image.write!(
+          Path.join(
+            avatars_dir,
+            filename <> "@ingame.jpg"
+          ),
+          quality: 90
+        )
 
         user =
           user
