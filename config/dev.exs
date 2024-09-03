@@ -57,10 +57,15 @@ config :acc_tournament, beatleader_redirect_uri: "http://localhost:4000/auth/cal
 # Watch static and templates for browser reloading.
 config :acc_tournament, AccTournamentWeb.Endpoint,
   live_reload: [
+    notify: [
+      live_view: [
+        ~r"lib/acc_tournament_web/core_components.ex$",
+        ~r"lib/acc_tournament_web/(controllers|live|components)/.*(ex|heex)$"
+      ]
+    ],
     patterns: [
       ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
-      ~r"priv/gettext/.*(po)$",
-      ~r"lib/acc_tournament_web/(controllers|live|components)/.*(ex|heex)$"
+      ~r"priv/gettext/.*(po)$"
     ]
   ]
 

@@ -39,7 +39,10 @@ defmodule AccTournamentWeb.Router do
       live "/rules/:slug/edit", RulebookAdminLive, :edit
     end
 
-    live_dashboard "/admin/dashboard", metrics: AccTournamentWeb.Telemetry
+    scope "/admin" do
+      live "/map_pools/:map_pool_id/add_map", AdminAddMapLive
+      live_dashboard "/dashboard", metrics: AccTournamentWeb.Telemetry
+    end
   end
 
   live_session(:default, on_mount: {AccTournamentWeb.UserAuth, :mount_current_user}) do

@@ -18,6 +18,10 @@ defmodule AccTournamentWeb.ProfileLive do
     )
   end
 
+  def role_to_string(:staff) do
+    "Staff"
+  end
+
   defp campaign_icon(0), do: ~p"/images/campaign/mercenary.webp"
   defp campaign_icon(1), do: ~p"/images/campaign/champ.webp"
   defp campaign_icon(2), do: ~p"/images/campaign/elder.webp"
@@ -68,6 +72,12 @@ defmodule AccTournamentWeb.ProfileLive do
           </div>
           <div class="text-3xl"><%= @user.headset %></div>
           <div class="flex flex-wrap gap-1.5 items-start">
+            <div
+              :for={role <- @user.roles}
+              class="bg-yellow-300 text-black font-semibold shadow px-3.5 p-1.5 rounded flex flex-row gap-2 items-center h-9"
+            >
+              <%= role_to_string(role) %>
+            </div>
             <%= for binding <- @user.account_bindings do %>
               <% service = @service_links[binding.service] %>
               <% field = service[:field] || :platform_id %>
@@ -80,7 +90,7 @@ defmodule AccTournamentWeb.ProfileLive do
                     binding |> Map.get(field) |> String.Chars.to_string()
                   )
                 }
-                class="bg-white hover:bg-neutral-50 dark:hover:bg-neutral-700 dark:bg-neutral-800 shadow sm:px-2.5 p-1.5 rounded flex flex-row gap-2 items-center"
+                class="bg-white hover:bg-neutral-50 dark:hover:bg-neutral-700 dark:bg-neutral-800 shadow sm:px-2.5 size-9 sm:w-max rounded flex flex-row gap-2 items-center justify-center"
               >
                 <img
                   src={service.logo}

@@ -57,4 +57,29 @@ defmodule AccTournament.Levels.BeatMap do
       :map_type
     ])
   end
+
+  def difficulty_string_to_int(difficulty) do
+    case difficulty do
+      "Easy" -> 1
+      "Normal" -> 3
+      "Hard" -> 5
+      "Expert" -> 7
+      "ExpertPlus" -> 9
+      _ -> nil
+    end
+  end
+
+  def difficulty_int_to_string(difficulty) when is_integer(difficulty),
+    do: difficulty_int_to_string(difficulty |> Integer.to_string())
+
+  def difficulty_int_to_string(difficulty) when is_binary(difficulty) do
+    case difficulty do
+      "1" -> "Easy"
+      "3" -> "Normal"
+      "5" -> "Hard"
+      "7" -> "Expert"
+      "9" -> "ExpertPlus"
+      _ -> nil
+    end
+  end
 end
