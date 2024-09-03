@@ -54,8 +54,14 @@ defmodule AccTournament.Levels.BeatMap do
       :hash,
       :max_score,
       :difficulty,
-      :map_type
+      :map_type,
+      :category_id
     ])
+    |> unique_constraint(
+      [:row],
+      name: :unique_in_pool_idx,
+      message: "map is already in this pool"
+    )
   end
 
   def difficulty_string_to_int(difficulty) do

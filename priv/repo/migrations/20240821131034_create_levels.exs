@@ -29,6 +29,11 @@ defmodule AccTournament.Repo.Migrations.CreateCategories do
 
     create index(:beat_maps, [:category_id])
     create index(:beat_maps, [:map_pool_id])
-    create unique_index(:beat_maps, [:map_pool_id, :hash, :map_type, :difficulty])
+
+    create unique_index(
+             :beat_maps,
+             [:map_pool_id, :hash, :map_type, :difficulty],
+             name: :unique_in_pool_idx
+           )
   end
 end

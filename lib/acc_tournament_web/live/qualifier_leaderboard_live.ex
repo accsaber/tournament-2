@@ -8,7 +8,7 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
   def qualifier_header(assigns) do
     ~H"""
     <h1 class="relative max-w-screen-lg mx-auto text-4xl p-2 px-3 mt-8">Qualifiers</h1>
-    <div class="flex relative max-w-screen-lg mx-auto p-2 gap-1 mb-2">
+    <div class="flex items-center relative max-w-screen-lg mx-auto p-2 gap-1 mb-2">
       <.link
         navigate={~p"/qualifiers"}
         class={
@@ -40,6 +40,14 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
         }
       >
         <img src={BeatMap.cover_url(map)} class="w-8 aspect-square rounded-sm bg-white/20" />
+      </.link>
+      <.link
+        href={~p"/api/map_pools/1/playlist"}
+        class="ml-auto flex items-center hover:bg-black/5 dark:hover:bg-white/10 p-1.5 sm:px-3 rounded gap-2"
+        download="acc-qualifiers.bplist"
+      >
+        <.icon name="hero-arrow-down-tray" class="w-5 h-5" />
+        <div class="hidden sm:block">Download playlist</div>
       </.link>
     </div>
     """
