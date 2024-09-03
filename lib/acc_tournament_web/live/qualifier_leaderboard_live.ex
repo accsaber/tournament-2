@@ -88,7 +88,29 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
   end
 
   def mount(_, _, socket) do
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(
+        AccTournament.PubSub,
+        "players_reranked"
+      )
+    end
+
     {:ok, socket |> assign(show_container: false, route: :qualifiers)}
+  end
+
+  def handle_info(:players_reranked, socket) do
+    players = query_players() |> Repo.all()
+    {:noreply, socket |> assign(players: players)}
+  end
+
+  defp query_players() do
+    import Ecto.Query, only: [from: 2]
+
+    from(c in User,
+      where: c.average_weight < 25.0,
+      order_by: [asc: c.average_weight],
+      select: {dense_rank() |> over(order_by: [asc: c.average_weight]), c}
+    )
   end
 
   def handle_params(_unsigned_params, _uri, socket) do
@@ -105,11 +127,7 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
       )
       |> Ecto.Multi.all(
         :players,
-        from(c in User,
-          where: c.average_weight < 25.0,
-          order_by: [asc: c.average_weight],
-          select: {dense_rank() |> over(order_by: [asc: c.average_weight]), c}
-        )
+        query_players()
       )
       |> Repo.transaction()
 

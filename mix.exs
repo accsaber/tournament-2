@@ -66,7 +66,8 @@ defmodule AccTournament.MixProject do
       {:image, "~> 0.37"},
       {:oban, "~> 2.17"},
       {:number, "~> 1.0"},
-      {:imgproxy, "~> 3.0"}
+      {:imgproxy, "~> 3.0"},
+      {:timex, "~> 3.7"}
     ]
   end
 

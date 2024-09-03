@@ -118,16 +118,16 @@ defmodule AccTournamentWeb.ProfileLive do
         <h2>Qualifier Scores</h2>
       </div>
 
-      <div :if={length(@user.attempts) > 0} class="grid md:grid-cols-2 gap-4 mt-4">
+      <div :if={length(@user.attempts) > 0} class="grid md:grid-cols-2 gap-4 mt-4 mb-12">
         <%= for attempt <- @user.attempts do %>
           <.link
             navigate={~p"/qualifiers/map_leaderboard/#{attempt.map_id}"}
-            class="rounded-xl bg-white dark:bg-neutral-800 shadow p-6 flex flex-col gap-6 mb-12 overflow-hidden relative isolate"
+            class="rounded-xl bg-white dark:bg-neutral-800 shadow p-6 flex flex-col gap-6 overflow-hidden relative isolate"
           >
             <div class="flex flex-row gap-3">
               <img
                 src={BeatMap.cover_url(attempt.map)}
-                class="w-24 h-24 absolute blur-2xl rounded-full -z-10 scale-150 brightness-125 saturate-150 opacity-50 dark:opacity-100"
+                class="w-24 h-24 absolute blur-2xl rounded-full -z-10 scale-150 brightness-150 saturate-125 opacity-50 dark:opacity-100"
               />
               <img src={BeatMap.cover_url(attempt.map)} class="w-24 h-24 rounded" />
               <div class="flex flex-col gap-1 justify-center text-xl">
@@ -169,7 +169,6 @@ defmodule AccTournamentWeb.ProfileLive do
       user in User,
       left_join: attempts in assoc(user, :attempts),
       distinct: attempts.map_id,
-      order_by: [desc: attempts.score],
       preload: [
         :account_bindings,
         attempts: {attempts, [map: [:category]]}

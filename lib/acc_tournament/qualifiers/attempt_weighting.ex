@@ -50,9 +50,10 @@ defmodule AccTournament.Qualifiers.AttemptWeighting do
           end
         end)
 
-      Phoenix.PubSub.broadcast(AccTournament.PubSub, "leaderboard_updated", {:map, map.id})
+      Phoenix.PubSub.broadcast(AccTournament.PubSub, "new_scores", {:new_scores, map.id})
 
       AccTournament.Qualifiers.PlayerWeighting.new(%{}) |> Oban.insert()
+
       {:ok, attempts}
     else
       :ok

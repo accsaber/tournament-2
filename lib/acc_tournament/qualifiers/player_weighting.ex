@@ -52,6 +52,7 @@ defmodule AccTournament.Qualifiers.PlayerWeighting do
       end
     end)
 
+    Phoenix.PubSub.broadcast(AccTournament.PubSub, "players_reranked", :players_reranked)
     :ok
   end
 end

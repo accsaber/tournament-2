@@ -23,7 +23,10 @@ defmodule AccTournament.Accounts.User do
     field :average_weight, :float
 
     has_many :account_bindings, AccTournament.Accounts.Binding
-    has_many :attempts, AccTournament.Qualifiers.Attempt, foreign_key: :player_id
+
+    has_many :attempts, AccTournament.Qualifiers.Attempt,
+      foreign_key: :player_id,
+      preload_order: [desc: :weight, desc: :score]
 
     timestamps(type: :utc_datetime)
   end

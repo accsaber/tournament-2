@@ -38,7 +38,7 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
         <div class="text-3xl font-semibold"><%= @map.name %></div>
         <div class="flex gap-1">
           <div class={[
-            "p-0.5 px-2 rounded uppercase w-max text-sm font-semibold",
+            "p-1 px-2 rounded w-max text-sm font-semibold",
             difficulty_to_class(@map.difficulty)
           ]}>
             <%= BeatMap.difficulty_int_to_friendly(@map.difficulty) %>
@@ -46,7 +46,7 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
           <div
             :if={@map.category}
             class={[
-              "p-0.5 px-2 rounded uppercase w-max text-sm font-semibold",
+              "p-1 px-2 rounded w-max text-sm font-semibold",
               "bg-neutral-100 dark:bg-neutral-900"
             ]}
           >
@@ -99,6 +99,20 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
         <:col :let={{_rank, attempt}} label="Weight">
           <%= if(!is_nil(attempt.weight), do: attempt.weight |> :erlang.float_to_binary(decimals: 2)) %>
         </:col>
+        <:col :let={{_rank, attempt}} label="Time Set">
+          <div class="relative w-max group/tooltip cursor-help">
+            <datetime-tooltip timestamp={attempt.updated_at}>
+              <%= Timex.from_now(attempt.updated_at) %>
+            </datetime-tooltip>
+            <div class={[
+              "absolute top-6 left-1/2 -translate-x-1/2 w-max bg-white rounded",
+              "px-2 py-1 dark:bg-neutral-800 opacity-0 pointer-events-none shadow",
+              "group-hover/tooltip:opacity-100 transition-opacity group-hover/tooltip:delay-700"
+            ]}>
+              <local-datetime><%= attempt.updated_at %>Z</local-datetime>
+            </div>
+          </div>
+        </:col>
         <:action :let={{_rank, attempt}}>
           <.link navigate={"#{attempt.player}"} class="text-sm font-semibold">
             Profile
@@ -109,11 +123,29 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
     """
   end
 
+  def handle_info({:new_scores, map_id}, socket) do
+    case socket.assigns.map do
+      %{id: ^map_id} ->
+        attempts = attempts_query(map_id) |> Repo.all()
+        {:noreply, socket |> assign(attempts: attempts)}
+
+      _ ->
+        {:noreply, socket}
+    end
+  end
+
   def mount(_, _, socket) do
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(
+        AccTournament.PubSub,
+        "new_scores"
+      )
+    end
+
     {:ok, socket |> assign(show_container: false, route: :qualifiers)}
   end
 
-  def handle_params(%{"id" => map_id}, _uri, conn) do
+  defp attempts_query(map_id) do
     attempts =
       from(a in Attempt,
         distinct: [a.map_id, a.player_id],
@@ -122,13 +154,14 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
         order_by: [asc: a.map_id, asc: a.player_id, desc: a.score]
       )
 
-    attempts =
-      from(a in subquery(attempts),
-        order_by: [desc: a.score],
-        select: {dense_rank() |> over(partition_by: a.map_id, order_by: [desc: a.score]), a},
-        preload: [:player]
-      )
+    from(a in subquery(attempts),
+      order_by: [desc: a.score],
+      select: {dense_rank() |> over(partition_by: a.map_id, order_by: [desc: a.score]), a},
+      preload: [:player]
+    )
+  end
 
+  def handle_params(%{"id" => map_id}, _uri, conn) do
     map =
       from(b in BeatMap,
         where: b.id == type(^map_id, :integer),
@@ -145,7 +178,7 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
       Ecto.Multi.new()
       |> one(:map, map)
       |> one(:pool, qualifier_pool)
-      |> all(:attempts, attempts)
+      |> all(:attempts, attempts_query(map_id))
       |> Repo.transaction()
 
     if(is_nil(map), do: raise(AccTournamentWeb.MapLeaderboardLive.MapNotFound))
