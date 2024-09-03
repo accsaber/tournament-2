@@ -8,7 +8,7 @@ k() {
 POD_IP=$(k get endpoints -l app=tournament-website -o jsonpath="{.items[0].subsets[].addresses[*].ip}" | sed 's/ /\n/g' | shuf | head -n1)
 POD_A_RECORD=$(echo $POD_IP | sed 's/\./-/g').default.pod.cluster.local
 FULL_NODE_NAME="acc_tournament@${POD_A_RECORD}"
-RELEASE_COOKIE=$(kubectl get secret acc-tournament-secret -o jsonpath='{.data.RELEASE_COOKIE}' | base64 -d)
+RELEASE_COOKIE=$(kubectl get secret --context accsaber acc-tournament-secret -o jsonpath='{.data.RELEASE_COOKIE}' | base64 -d)
 
 if [[ $COMMAND == "livebook" ]]; then
     export LIVEBOOK_NODE="local"

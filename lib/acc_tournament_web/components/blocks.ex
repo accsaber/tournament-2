@@ -7,11 +7,11 @@ defmodule AccTournamentWeb.LayoutComponents do
 
   def header_navigation,
     do: [
-      %{
-        label: "Home",
-        navigate: ~p"/",
-        route: :home
-      },
+      # %{
+      #   label: "Home",
+      #   navigate: ~p"/",
+      #   route: :home
+      # },
       # %{
       #   label: "Qualifiers",
       #   navigate: ~p"/qualifiers",

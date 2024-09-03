@@ -24,6 +24,7 @@ form,
 
   textarea {
     field-sizing: content;
+    min-height: 24rem;
   }
 
   & input[type="checkbox"] {

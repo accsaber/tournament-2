@@ -40,6 +40,7 @@ defmodule AccTournamentWeb.Router do
     end
 
     scope "/admin" do
+      live "/users", AdminUserDirectory
       live "/map_pools/:map_pool_id/add_map", AdminAddMapLive
       live_dashboard "/dashboard", metrics: AccTournamentWeb.Telemetry
     end
@@ -49,10 +50,9 @@ defmodule AccTournamentWeb.Router do
     scope "/", AccTournamentWeb do
       pipe_through :browser
 
-      get "/", PageController, :home
-
       get "/health", HealthController, :index
 
+      live "/", RulebookLive, :show
       live "/rules", RulebookLive, :show
       live "/rules/:slug", RulebookLive, :show
 

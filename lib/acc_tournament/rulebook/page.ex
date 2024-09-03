@@ -6,6 +6,7 @@ defmodule AccTournament.Rulebook.Page do
     field :title, :string
     field :body, :string
     field :slug, :string
+    field :hidden, :boolean, default: false
 
     timestamps(type: :utc_datetime)
   end
@@ -13,7 +14,7 @@ defmodule AccTournament.Rulebook.Page do
   @doc false
   def changeset(page, attrs) do
     page
-    |> cast(attrs, [:title, :slug, :body])
+    |> cast(attrs, [:title, :slug, :body, :hidden])
     |> validate_required([:title, :slug, :body])
   end
 end

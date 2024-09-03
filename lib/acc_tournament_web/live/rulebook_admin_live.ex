@@ -127,7 +127,8 @@ defmodule AccTournamentWeb.RulebookAdminLive do
     <.form for={@form} method="post" phx-change="validate" phx-submit="save">
       <.input field={@form[:title]} label="Title" />
       <.input :if={@page.slug != "home"} field={@form[:slug]} label="Slug" />
-      <.input field={@form[:body]} label="Body" type="textarea" class="min-h-96" />
+      <.input field={@form[:body]} label="Body" type="textarea" class="h-[32rem]" />
+      <.input field={@form[:hidden]} label="Hidden" type="checkbox" />
       <div class="flex gap-2">
         <.button type="submit" class="flex-1">Save</.button>
         <.button

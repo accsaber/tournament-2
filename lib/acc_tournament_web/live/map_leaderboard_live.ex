@@ -10,6 +10,13 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
   import Ecto.Query, only: [from: 2, subquery: 1]
   import Ecto.Multi, only: [one: 3, all: 3]
 
+  def difficulty_to_class(1), do: "bg-green-600 text-white"
+  def difficulty_to_class(3), do: "bg-blue-500 text-white"
+  def difficulty_to_class(5), do: "bg-orange-500 text-white"
+  def difficulty_to_class(7), do: "bg-red-500 text-white"
+  def difficulty_to_class(9), do: "bg-purple-500 text-white"
+  def difficulty_to_class(id), do: id |> Integer.to_string()
+
   def render(assigns) do
     ~H"""
     <div class="dots-container absolute inset-0 overflow-hidden -top-8 h-80">
@@ -19,21 +26,47 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
       <div class="dots" />
     </div>
     <.qualifier_header qualifier_pool={@qualifier_pool} current_route={{:map, @map.id}} />
-    <div class="flex items-center gap-4 card relative max-w-screen-lg mx-auto  shadow-xl">
-      <img src={BeatMap.cover_url(@map)} class="rounded-xl w-32 aspect-square" />
-      <div class="flex flex-col gap-0.5">
+    <div class="flex flex-col md:flex-row md:items-center gap-4 card relative max-w-screen-lg mx-auto  shadow-xl">
+      <img
+        src={BeatMap.cover_url(@map)}
+        class={[
+          "rounded-xl size-24 md:size-36 aspect-square",
+          difficulty_to_class(@map.difficulty)
+        ]}
+      />
+      <div class="flex flex-col gap-1">
         <div class="text-3xl font-semibold"><%= @map.name %></div>
-        <div><%= @map.artist %></div>
-        <div>Mapped by <strong class="font-semibold"><%= @map.mapper %></strong></div>
+        <div class="flex gap-1">
+          <div class={[
+            "p-0.5 px-2 rounded uppercase w-max text-sm font-semibold",
+            difficulty_to_class(@map.difficulty)
+          ]}>
+            <%= BeatMap.difficulty_int_to_friendly(@map.difficulty) %>
+          </div>
+          <div
+            :if={@map.category}
+            class={[
+              "p-0.5 px-2 rounded uppercase w-max text-sm font-semibold",
+              "bg-neutral-100 dark:bg-neutral-900"
+            ]}
+          >
+            <%= @map.category.name %>
+          </div>
+        </div>
+        <div class="flex flex-row gap-2">
+          <div><%= @map.artist %></div>
+          <div>&bull;</div>
+          <div>Mapped by <strong class="font-semibold"><%= @map.mapper %></strong></div>
+        </div>
         <div class="flex gap-0.5">
-          <div class="select-all px-2 h-8 flex items-center bg-neutral-100 dark:bg-neutral-900 rounded w-fit font-mono">
+          <div class="select-all px-2 h-8 flex items-center bg-neutral-100 dark:bg-neutral-900 rounded-l w-fit font-mono">
             !bsr <%= @map.beatsaver_id %>
           </div>
           <a
             href={"https://beatsaver.com/maps/#{@map.beatsaver_id}"}
             class={[
               "flex items-center justify-center",
-              "bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-700 rounded w-8 h-8"
+              "bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-700 rounded-r w-8 h-8"
             ]}
           >
             <img src={~p"/images/beatsaver.svg"} class="h-4 w-4 dark:invert" />
@@ -98,7 +131,8 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
 
     map =
       from(b in BeatMap,
-        where: b.id == type(^map_id, :integer)
+        where: b.id == type(^map_id, :integer),
+        preload: [:category]
       )
 
     qualifier_pool =

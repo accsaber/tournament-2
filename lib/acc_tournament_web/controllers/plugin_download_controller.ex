@@ -21,7 +21,6 @@ defmodule AccTournamentWeb.PluginDownloadController do
       :zip.zip(
         "Qualifiers-#{user.slug}.zip",
         [
-          {~c"plugin.txt", "waiting on speecil :)"},
           {~c"UserData/ACCQualifiers/scary/DO_NOT_SHARE.SCARY", token}
         ],
         [:memory, {:compress, []}]

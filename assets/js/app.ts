@@ -6,6 +6,7 @@ import { LiveSocket } from "phoenix_live_view";
 import topbar from "topbar";
 import { TournamentHeader } from "./client/header";
 import "./client/analytics";
+import LocalDateTime from "./client/local-timestamp";
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")!
@@ -36,6 +37,7 @@ declare global {
 window.liveSocket = liveSocket;
 
 customElements.define("tournament-header", TournamentHeader);
+customElements.define("local-datetime", LocalDateTime);
 
 window.addEventListener("phx:silent_new_url", (e) => {
   if (!(e instanceof CustomEvent)) return;

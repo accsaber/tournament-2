@@ -6,7 +6,7 @@ defmodule AccTournamentWeb.RulebookLive do
 
   def mount(_params, _session, socket) do
     import Ecto.Query, only: [from: 2]
-    pages = from(p in Page, order_by: [asc: p.id]) |> Repo.all()
+    pages = from(p in Page, order_by: [asc: p.id], where: not p.hidden) |> Repo.all()
     {:ok, socket |> assign(pages: pages, route: :rules)}
   end
 

@@ -88,4 +88,11 @@ defmodule AccTournament.Levels.BeatMap do
       _ -> nil
     end
   end
+
+  def difficulty_int_to_friendly(1), do: "Easy"
+  def difficulty_int_to_friendly(3), do: "Normal"
+  def difficulty_int_to_friendly(5), do: "Hard"
+  def difficulty_int_to_friendly(7), do: "Expert"
+  def difficulty_int_to_friendly(9), do: "Expert+"
+  def difficulty_int_to_friendly(p), do: p
 end

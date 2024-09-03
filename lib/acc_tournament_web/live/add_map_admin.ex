@@ -173,8 +173,6 @@ defmodule AccTournamentWeb.AdminAddMapLive do
 
     case Ecto.Changeset.apply_action(changeset, :insert) do
       {:ok, _map} ->
-        IO.inspect(changeset)
-
         AccTournament.Repo.insert(changeset)
         |> case do
           {:ok, _} ->
@@ -184,8 +182,6 @@ defmodule AccTournamentWeb.AdminAddMapLive do
              |> push_navigate(to: ~p"/map_pools/#{socket.assigns.map_pool.id}")}
 
           {:error, changeset} ->
-            IO.inspect(changeset)
-
             {:noreply,
              socket
              |> assign(beat_map_form: to_form(changeset))}
