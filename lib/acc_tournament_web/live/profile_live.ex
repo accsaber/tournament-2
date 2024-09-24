@@ -62,9 +62,12 @@ defmodule AccTournamentWeb.ProfileLive do
               <% _ -> %>
                 <img src={campaign_icon(@highest_milestone)} class="w-8 object-cover translate-y-0.5" />
             <% end %>
-            <span data-highest-milestone={@highest_milestone}>
+            <div
+              data-highest-milestone={@highest_milestone}
+              class="overflow-ellipsis overflow-hidden max-w-full py-6 -my-6"
+            >
               <%= @user.display_name %>
-            </span>
+            </div>
 
             <div class="bg-neutral-100 dark:bg-neutral-800 block text-xl relative bottom-1.5 px-2 rounded font-normal">
               <%= @user.pronouns %>

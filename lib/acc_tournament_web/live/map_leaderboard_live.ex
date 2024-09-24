@@ -19,8 +19,8 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
 
   def render(assigns) do
     ~H"""
-    <div class="dots-container absolute inset-0 overflow-hidden -top-8 h-80">
-      <div class="absolute -inset-6 bottom-0 blur-[1.5rem]">
+    <div class="dots-container absolute inset-0 overflow-hidden -top-8 h-96">
+      <div class="absolute -inset-6 bottom-0 blur-[1.5rem] saturate-150">
         <img class="object-cover w-full h-full" src={BeatMap.cover_url(@map)} />
       </div>
       <div class="dots" />

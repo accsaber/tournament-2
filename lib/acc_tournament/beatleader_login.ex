@@ -43,6 +43,9 @@ defmodule AccTournament.BeatleaderLogin do
   defp generate_random_password(),
     do: for(_ <- 1..72, into: "", do: <<Enum.random(~c"0123456789abcdef")>>)
 
+  @replacement "…"
+  @maxlength 24
+
   def create_user_from_beatleader_profile(%{"id" => id, "name" => username}) do
     {int_id, _} = Integer.parse(id)
 
@@ -54,7 +57,12 @@ defmodule AccTournament.BeatleaderLogin do
           confirmed_at: NaiveDateTime.local_now()
         }
         |> User.registration_changeset(%{
-          display_name: username,
+          display_name:
+            if String.length(username) <= @maxlength do
+              username
+            else
+              (username |> String.slice(0, @maxlength - 1)) <> @replacement
+            end,
           password: generate_random_password(),
           email: id <> "@beatleader"
         })

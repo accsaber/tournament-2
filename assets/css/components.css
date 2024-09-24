@@ -15,7 +15,7 @@
 }
 
 .dots-container {
-  mask-image: linear-gradient(to bottom, #fff2, #0000);
+  mask-image: linear-gradient(to bottom, #fff6, #0000);
 
   & .splashbg {
     @apply w-full h-full object-cover;

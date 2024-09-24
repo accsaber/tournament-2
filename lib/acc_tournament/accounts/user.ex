@@ -65,7 +65,7 @@ defmodule AccTournament.Accounts.User do
   defp validate_display_name(changeset, _opts) do
     changeset
     |> validate_required([:display_name])
-    |> validate_length(:display_name, min: 3, max: 16)
+    |> validate_length(:display_name, min: 1, max: 24)
   end
 
   defp validate_email(changeset, opts) do

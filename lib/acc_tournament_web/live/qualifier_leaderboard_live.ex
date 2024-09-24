@@ -55,6 +55,18 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
 
   def render(assigns) do
     ~H"""
+    <div
+      :if={length(@players) > 0}
+      class="dots-container absolute inset-0 overflow-hidden -top-8 h-full"
+    >
+      <div class="absolute -inset-6 bottom-0 blur-[1.5rem]">
+        <img
+          class="object-cover w-full h-full saturate-150"
+          src={User.public_avatar_url(@players |> List.first() |> elem(1))}
+        />
+      </div>
+      <div class="dots" />
+    </div>
     <.qualifier_header qualifier_pool={@qualifier_pool} current_route={{:leaderboard, :players}} />
     <div class="card max-w-screen-lg mx-auto relative">
       <.table rows={@players} id="players">
