@@ -77,7 +77,7 @@ defmodule AccTournamentWeb.ProfileLive do
           <div class="flex flex-wrap gap-1.5 items-start">
             <div
               :for={role <- @user.roles}
-              class="bg-yellow-300 text-black font-semibold shadow px-3.5 p-1.5 rounded flex flex-row gap-2 items-center h-9"
+              class="bg-yellow-300 text-black font-semibold px-3.5 p-1.5 rounded flex flex-row gap-2 items-center h-9"
             >
               <%= role_to_string(role) %>
             </div>
@@ -128,11 +128,7 @@ defmodule AccTournamentWeb.ProfileLive do
             class="rounded-xl bg-white dark:bg-neutral-800 shadow p-6 flex flex-col gap-6 overflow-hidden relative isolate"
           >
             <div class="flex flex-row gap-3">
-              <img
-                src={BeatMap.cover_url(attempt.map)}
-                class="w-24 h-24 absolute blur-2xl rounded-full -z-10 scale-150 brightness-150 saturate-125 opacity-50 dark:opacity-100"
-              />
-              <img src={BeatMap.cover_url(attempt.map)} class="w-24 h-24 rounded" />
+              <img src={BeatMap.cover_url(attempt.map)} class="w-24 h-24 rounded glow" />
               <div class="flex flex-col gap-1 justify-center text-xl">
                 <div class="text-xl font-semibold"><%= attempt.map.name %></div>
                 <div class="text-sm"><%= attempt.map.mapper %></div>

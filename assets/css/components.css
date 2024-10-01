@@ -65,3 +65,7 @@
 [data-highest-milestone="4"] {
   color: var(--celestial);
 }
+
+.glow {
+  filter: url(#glow);
+}
