@@ -3,13 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" href={~p"/images/favicon.webp"} type="image/x-icon">
+    <link rel="shortcut icon" href={~p"/images/favicon.webp"} type="image/x-icon" />
     <meta name="csrf-token" content={get_csrf_token()} />
     <.live_title suffix=" · Acc Tournament">
       <%= assigns[:page_title] || "Acc Tournament" %>
     </.live_title>
-    <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
-    <script phx-track-static type="module" src={~p"/assets/app.js"} />
+    <LiveVue.Reload.vite_assets assets={["/js/app.js", "/css/app.css"]}>
+      <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+      <script phx-track-static type="module" src={~p"/assets/app.js"} />
+    </LiveVue.Reload.vite_assets>
   </head>
   <body class="antialiased">
     <%= @inner_content %>

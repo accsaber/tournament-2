@@ -25,8 +25,7 @@ config :acc_tournament, AccTournamentWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "2uYa9MRh/dczDYUIw/ruu2lQyDJZ8xJtPUWZkV7T8Xwd+2lSrFYsnyG/OZs0Iugd",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:acc_tournament, ~w(--sourcemap=inline --watch)]},
-    postcss: {ExPostcss, :run, [:acc_tournament, ~w(--watch)]}
+    npm: ["run", "dev", cd: Path.expand("../assets", __DIR__)]
   ]
 
 config :acc_tournament, beatleader_redirect_uri: "http://localhost:4000/auth/callback/beatleader"
@@ -71,6 +70,13 @@ config :acc_tournament, AccTournamentWeb.Endpoint,
 
 # Enable dev routes for dashboard and mailbox
 config :acc_tournament, dev_routes: true
+
+# Vite config
+config :live_vue,
+  vite_host: "http://localhost:5173",
+  ssr_module: LiveVue.SSR.ViteJS,
+  # if you want to disable SSR by default, make it false
+  ssr: true
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"

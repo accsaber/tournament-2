@@ -42,8 +42,6 @@ defmodule AccTournament.MixProject do
       {:phoenix_live_view, "~> 0.20.2"},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.8.3"},
-      {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
-      {:ex_postcss, "~> 0.1", runtime: Mix.env() == :dev},
       {:heroicons,
        github: "tailwindlabs/heroicons",
        tag: "v2.1.1",
@@ -67,7 +65,8 @@ defmodule AccTournament.MixProject do
       {:oban, "~> 2.17"},
       {:number, "~> 1.0"},
       {:imgproxy, "~> 3.0"},
-      {:timex, "~> 3.7"}
+      {:timex, "~> 3.7"},
+      {:live_vue, "~> 0.4"}
     ]
   end
 
@@ -84,16 +83,15 @@ defmodule AccTournament.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": [
-        "esbuild.install --if-missing",
         "cmd npm ci --prefix assets"
       ],
       "assets.build": [
-        "postcss acc_tournament",
-        "esbuild acc_tournament"
+        "cmd --cd assets npm run build",
+        "cmd --cd assets npm run build-server"
       ],
       "assets.deploy": [
-        "postcss acc_tournament --env production",
-        "esbuild acc_tournament --minify",
+        "cmd --cd assets npm run build",
+        "cmd --cd assets npm run build-server",
         "phx.digest"
       ]
     ]
