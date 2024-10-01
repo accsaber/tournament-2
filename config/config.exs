@@ -35,7 +35,7 @@ config :esbuild,
   version: "0.17.11",
   acc_tournament: [
     args:
-      ~w(js/app.ts --bundle --splitting --target=es2020 --format=esm --outdir=../priv/static/assets --external:/fonts/* --external:/images/* --analyze),
+      ~w(js/app.js --bundle --splitting --target=es2020 --format=esm --outdir=../priv/static/assets --external:/fonts/* --external:/images/* --analyze),
     cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
   ]

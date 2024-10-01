@@ -7,13 +7,18 @@ import topbar from "topbar";
 import { TournamentHeader } from "./client/header";
 import "./client/analytics";
 import LocalDateTime from "./client/local-timestamp";
+import * as bert from "./bert";
 
-let csrfToken = document
-  .querySelector("meta[name='csrf-token']")!
-  .getAttribute("content");
-let liveSocket = new LiveSocket("/live", Socket, {
-  longPollFallbackMs: 2500,
+const csrfToken = document
+  .querySelector("meta[name='csrf-token']")
+  ?.getAttribute("content");
+const liveSocket = new LiveSocket("/live", Socket, {
   params: { _csrf_token: csrfToken },
+  decode: (rawPayload, callback) => {
+    console.log(rawPayload);
+    let [join_ref, ref, topic, event, payload] = bert.decode(rawPayload);
+    return callback({ join_ref, ref, topic, event, payload });
+  },
 });
 
 // Show progress bar on live navigation and form submits
@@ -29,11 +34,6 @@ liveSocket.connect();
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 
-declare global {
-  interface Window {
-    liveSocket: LiveSocket;
-  }
-}
 window.liveSocket = liveSocket;
 
 customElements.define("tournament-header", TournamentHeader);
