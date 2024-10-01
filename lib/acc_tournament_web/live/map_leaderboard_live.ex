@@ -10,6 +10,15 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
   import Ecto.Query, only: [from: 2, subquery: 1]
   import Ecto.Multi, only: [one: 3, all: 3]
 
+  def complexity_to_rgb(complexity) do
+    complexity = min(complexity, 15)
+    red = complexity / 15 * 255
+    green = max((15 - complexity) / 15 * 255, 0)
+    blue = max(-:math.pow(complexity - 7, 2) * 100 + 255, 0)
+
+    "rgb(#{round(red)}, #{round(green)}, #{round(blue)})"
+  end
+
   def difficulty_to_class(1), do: "bg-green-600 text-white"
   def difficulty_to_class(3), do: "bg-blue-500 text-white"
   def difficulty_to_class(5), do: "bg-orange-500 text-white"
@@ -51,6 +60,16 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
             ]}
           >
             <%= @map.category.name %>
+          </div>
+          <div class="rounded relative w-36 overflow-hidden bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center">
+            <div
+              class={[
+                "absolute top-0 left-0 h-full opacity-70 dark:opacity-100",
+                difficulty_to_class(@map.difficulty)
+              ]}
+              style={"background: #{complexity_to_rgb(@map.complexity)}; width: #{@map.complexity / 15 * 100}%"}
+            />
+            <div class="relative font-semibold"><%= @map.complexity %></div>
           </div>
         </div>
         <div class="flex flex-row gap-2">

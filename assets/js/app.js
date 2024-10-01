@@ -15,7 +15,6 @@ const csrfToken = document
 const liveSocket = new LiveSocket("/live", Socket, {
   params: { _csrf_token: csrfToken },
   decode: (rawPayload, callback) => {
-    console.log(rawPayload);
     let [join_ref, ref, topic, event, payload] = bert.decode(rawPayload);
     return callback({ join_ref, ref, topic, event, payload });
   },

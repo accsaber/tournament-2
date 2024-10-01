@@ -147,7 +147,7 @@ defmodule AccTournamentWeb.ProfileLive do
                 </div>
               </div>
               <div :if={attempt.weight} class="text-3xl font-semibold">
-                <%= :erlang.float_to_binary(attempt.weight, decimals: 2) %>x
+                <%= :erlang.float_to_binary(attempt.weight, decimals: 2) %>AP
               </div>
             </div>
           </.link>
