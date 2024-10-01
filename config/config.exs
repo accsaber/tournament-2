@@ -30,24 +30,6 @@ config :acc_tournament, AccTournamentWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :acc_tournament, AccTournament.Mailer, adapter: Swoosh.Adapters.Local
 
-# Configure esbuild (the version is required)
-config :esbuild,
-  version: "0.17.11",
-  acc_tournament: [
-    args:
-      ~w(js/app.js --bundle --splitting --target=es2020 --format=esm --outdir=../priv/static/assets --external:/fonts/* --external:/images/* --analyze),
-    cd: Path.expand("../assets", __DIR__),
-    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
-  ]
-
-# Configure tailwind (the version is required)
-
-config :ex_postcss,
-  acc_tournament: [
-    args: ~w(css/app.css -o ../priv/static/assets/app.css --config ./postcss.config.js),
-    cd: Path.expand("../assets", __DIR__)
-  ]
-
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

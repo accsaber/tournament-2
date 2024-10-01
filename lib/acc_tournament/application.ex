@@ -14,6 +14,7 @@ defmodule AccTournament.Application do
        [Application.get_env(:libcluster, :topologies), [name: AccTournament.ClusterSupervisor]]},
       {Oban, Application.fetch_env!(:acc_tournament, Oban)},
       {Phoenix.PubSub, name: AccTournament.PubSub},
+      {NodeJS.Supervisor, [path: LiveVue.SSR.NodeJS.server_path(), pool_size: 4]},
       # Start the Finch HTTP client for sending emails
       {Finch, name: AccTournament.Finch},
       # Start a worker by calling: AccTournament.Worker.start_link(arg)

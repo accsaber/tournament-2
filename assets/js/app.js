@@ -7,7 +7,10 @@ import topbar from "topbar";
 import { TournamentHeader } from "./client/header";
 import "./client/analytics";
 import LocalDateTime from "./client/local-timestamp";
+import { getHooks } from "live_vue";
+import components from "../vue";
 import * as bert from "./bert";
+import "../css/app.css";
 
 const csrfToken = document
   .querySelector("meta[name='csrf-token']")
@@ -18,6 +21,7 @@ const liveSocket = new LiveSocket("/live", Socket, {
     let [join_ref, ref, topic, event, payload] = bert.decode(rawPayload);
     return callback({ join_ref, ref, topic, event, payload });
   },
+  hooks: getHooks(components),
 });
 
 // Show progress bar on live navigation and form submits

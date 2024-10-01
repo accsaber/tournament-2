@@ -29,6 +29,9 @@ acc_tournament-*.tar
 /priv/static/assets/
 
 # Ignore uploads
+/priv/vue/
+
+# Ignore uploads
 /priv/static/uploads/
 
 # Ignore digested assets cache.

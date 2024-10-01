@@ -11,6 +11,8 @@ module.exports = {
     "./js/**/*.ts",
     "../lib/acc_tournament_web.ex",
     "../lib/acc_tournament_web/**/*.*ex",
+    "./vue/**/*.vue",
+    "../lib/**/*.vue",
   ],
   theme: {
     extend: {
