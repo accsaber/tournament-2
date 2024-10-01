@@ -24,7 +24,7 @@ defmodule AccTournamentWeb.Endpoint do
   plug Plug.Static,
     at: "/",
     from: :acc_tournament,
-    gzip: false,
+    gzip: true,
     only: AccTournamentWeb.static_paths()
 
   # Code reloading can be explicitly enabled under the
