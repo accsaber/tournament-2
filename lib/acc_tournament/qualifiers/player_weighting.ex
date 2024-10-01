@@ -38,7 +38,7 @@ defmodule AccTournament.Qualifiers.PlayerWeighting do
         weights = for attempt <- attempts, do: attempt.weight
 
         padding =
-          Stream.cycle([25])
+          Stream.cycle([0])
           |> Enum.take(@counted_attempts)
 
         weights =

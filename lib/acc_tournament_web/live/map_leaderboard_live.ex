@@ -96,7 +96,7 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
         <:col :let={{_rank, attempt}} label="Accuracy">
           <%= (attempt.score / @map.max_score * 100) |> :erlang.float_to_binary(decimals: 2) %>%
         </:col>
-        <:col :let={{_rank, attempt}} label="Weight">
+        <:col :let={{_rank, attempt}} label="AP">
           <%= if(!is_nil(attempt.weight), do: attempt.weight |> :erlang.float_to_binary(decimals: 2)) %>
         </:col>
         <:col :let={{_rank, attempt}} label="Time Set">

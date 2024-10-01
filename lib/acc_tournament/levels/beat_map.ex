@@ -12,7 +12,8 @@ defmodule AccTournament.Levels.BeatMap do
              :beatsaver_id,
              :max_score,
              :category_id,
-             :map_type
+             :map_type,
+             :complexity
            ]}
   schema "beat_maps" do
     field :name, :string
@@ -23,6 +24,7 @@ defmodule AccTournament.Levels.BeatMap do
     field :beatsaver_id, :string
     field :max_score, :integer
     field :map_type, :string
+    field :complexity, :float
 
     belongs_to(:map_pool, AccTournament.Levels.MapPool)
     belongs_to(:category, AccTournament.Levels.Category)

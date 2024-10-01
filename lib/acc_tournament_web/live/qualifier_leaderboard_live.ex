@@ -84,7 +84,7 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
             </div>
           </.link>
         </:col>
-        <:col :let={{_rank, player}} label="Average Weight">
+        <:col :let={{_rank, player}} label="Average AP">
           <%= if(!is_nil(player.average_weight),
             do: player.average_weight |> :erlang.float_to_binary(decimals: 2)
           ) %>
@@ -119,9 +119,9 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
     import Ecto.Query, only: [from: 2]
 
     from(c in User,
-      where: c.average_weight < 25.0,
-      order_by: [asc: c.average_weight],
-      select: {dense_rank() |> over(order_by: [asc: c.average_weight]), c}
+      where: c.average_weight > 0.0,
+      order_by: [desc: c.average_weight],
+      select: {dense_rank() |> over(order_by: [desc: c.average_weight]), c}
     )
   end
 
