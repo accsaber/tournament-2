@@ -11,8 +11,7 @@ body {
 }
 
 [data-phx-main] {
-  display: flex;
-  flex-direction: column;
+  display: contents;
 }
 
 :root {
