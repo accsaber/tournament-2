@@ -8,7 +8,7 @@ defmodule AccTournamentWeb.ApiUserJSON do
       display_name: user.display_name,
       avatar_url: User.ingame_avatar_url(user),
       slug: user.slug,
-      qualifier_seed: -1
+      qualifier_seed: conn.assigns.rank
     }
   end
 end
