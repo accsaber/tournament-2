@@ -101,15 +101,15 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
         </:col>
         <:col :let={{_rank, attempt}} label="Time Set">
           <div class="relative w-max group/tooltip cursor-help">
-            <datetime-tooltip timestamp={attempt.updated_at}>
-              <%= Timex.from_now(attempt.updated_at) %>
+            <datetime-tooltip timestamp={attempt.inserted_at}>
+              <%= Timex.from_now(attempt.inserted_at) %>
             </datetime-tooltip>
             <div class={[
               "absolute top-6 left-1/2 -translate-x-1/2 w-max bg-white rounded",
               "px-2 py-1 dark:bg-neutral-800 opacity-0 pointer-events-none shadow",
               "group-hover/tooltip:opacity-100 transition-opacity group-hover/tooltip:delay-700"
             ]}>
-              <local-datetime><%= attempt.updated_at %>Z</local-datetime>
+              <local-datetime><%= attempt.inserted_at %>Z</local-datetime>
             </div>
           </div>
         </:col>
