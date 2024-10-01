@@ -66,7 +66,10 @@ defmodule AccTournament.MixProject do
       {:number, "~> 1.0"},
       {:imgproxy, "~> 3.0"},
       {:timex, "~> 3.7"},
-      {:live_vue, "~> 0.4"}
+      {:live_vue, "~> 0.4"},
+      {:phoenix_bakery, "~> 0.1.0", runtime: false},
+      {:ezstd, "~> 1.0", runtime: false},
+      {:brotli, ">= 0.0.0", runtime: false}
     ]
   end
 

@@ -23,8 +23,10 @@ defmodule AccTournamentWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
+    encodings: [{"zstd", ".zstd"}],
     from: :acc_tournament,
     gzip: true,
+    brotli: true,
     only: AccTournamentWeb.static_paths()
 
   # Code reloading can be explicitly enabled under the
