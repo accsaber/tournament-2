@@ -27,15 +27,7 @@ yq -i ".images[0].newName = \"$IMAGE_NAME\"" $MANIFESTS/kustomization.yml || exi
 yq -i ".images[0].newTag = \"$IMAGE_TAG\"" $MANIFESTS/kustomization.yml || exit $?
 mkdir -p $MANIFESTS/built
 kubectl kustomize $MANIFESTS > $MANIFESTS/all.yml
-gcsplit --elide-empty-files  --quiet -f $MANIFESTS/built/chunk $MANIFESTS/all.yml "/---/" "{*}"
-pids=()
-for chunk in $MANIFESTS/built/chunk*; do
-    kubectl apply -f $chunk --context accsaber --server-side &
-    pids[${chunk//[^0-9]/}]=$!
-done
-for pid in ${pids[*]}; do
-    wait $pid
-done
+kubectl apply -f $MANIFESTS/all.yml --context accsaber --server-side
 
 echo -e "\x1b[1mcleaning up\x1b[0m"
 rm -r $MANIFESTS
