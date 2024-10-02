@@ -128,7 +128,11 @@ defmodule AccTournamentWeb.ProfileLive do
             class="rounded-xl bg-white dark:bg-neutral-800 shadow p-6 flex flex-col gap-6 overflow-hidden relative isolate"
           >
             <div class="flex flex-row gap-3">
-              <img src={BeatMap.cover_url(attempt.map)} class="w-24 h-24 rounded glow" />
+              <img
+                src={BeatMap.cover_url(attempt.map)}
+                class="w-24 h-24 absolute blur-2xl rounded-full -z-10 scale-150 brightness-150 saturate-125 opacity-50 dark:opacity-100"
+              />
+              <img src={BeatMap.cover_url(attempt.map)} class="w-24 h-24 rounded" />
               <div class="flex flex-col gap-1 justify-center text-xl">
                 <div class="text-xl font-semibold"><%= attempt.map.name %></div>
                 <div class="text-sm"><%= attempt.map.mapper %></div>
