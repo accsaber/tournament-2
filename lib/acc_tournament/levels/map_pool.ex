@@ -7,7 +7,8 @@ defmodule AccTournament.Levels.MapPool do
     field :name, :string
     field :icon_id, :string
 
-    has_many :beat_maps, AccTournament.Levels.BeatMap
+    has_many :beat_maps, AccTournament.Levels.BeatMap,
+      preload_order: [asc: :category_id, asc: :complexity, asc: :max_score]
   end
 
   @doc false

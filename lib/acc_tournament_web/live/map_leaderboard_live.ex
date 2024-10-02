@@ -35,7 +35,7 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
       <div class="dots" />
     </div>
     <.qualifier_header qualifier_pool={@qualifier_pool} current_route={{:map, @map.id}} />
-    <div class="flex flex-col md:flex-row md:items-center gap-4 card relative max-w-screen-lg mx-auto  shadow-xl">
+    <div class="flex flex-col md:flex-row md:items-center gap-4 card relative max-w-screen-lg mx-auto">
       <img
         src={BeatMap.cover_url(@map)}
         class={[
