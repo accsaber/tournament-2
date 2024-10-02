@@ -77,7 +77,7 @@ defmodule AccTournamentWeb.ProfileLive do
           <div class="flex flex-wrap gap-1.5 items-start">
             <div
               :for={role <- @user.roles}
-              class="bg-yellow-300 text-black font-semibold px-3.5 p-1.5 rounded flex flex-row gap-2 items-center h-9"
+              class="bg-yellow-300 text-black font-semibold shadow px-3.5 p-1.5 rounded flex flex-row gap-2 items-center h-9"
             >
               <%= role_to_string(role) %>
             </div>

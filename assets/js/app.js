@@ -9,7 +9,6 @@ import "./client/analytics";
 import LocalDateTime from "./client/local-timestamp";
 import { getHooks } from "live_vue";
 import components from "../vue";
-import * as bert from "./bert";
 import "../css/app.css";
 
 const csrfToken = document
@@ -17,10 +16,6 @@ const csrfToken = document
   ?.getAttribute("content");
 const liveSocket = new LiveSocket("/live", Socket, {
   params: { _csrf_token: csrfToken },
-  decode: (rawPayload, callback) => {
-    let [join_ref, ref, topic, event, payload] = bert.decode(rawPayload);
-    return callback({ join_ref, ref, topic, event, payload });
-  },
   hooks: getHooks(components),
 });
 
