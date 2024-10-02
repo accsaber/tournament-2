@@ -12,21 +12,21 @@ defmodule AccTournamentWeb.LayoutComponents do
       #   navigate: ~p"/",
       #   route: :home
       # },
-      # %{
-      #   label: "Qualifiers",
-      #   navigate: ~p"/qualifiers",
-      #   route: :qualifiers
-      # },
       %{
         label: "Rules",
         navigate: ~p"/rules",
         route: :rules
+      },
+      %{
+        label: "Qualifiers",
+        navigate: ~p"/qualifiers",
+        route: :qualifiers
+      },
+      %{
+        label: "Map Pools",
+        navigate: ~p"/map_pools",
+        route: :map_pools
       }
-      # %{
-      #   label: "Map Pools",
-      #   navigate: ~p"/map_pools",
-      #   route: :map_pools
-      # }
     ]
 
   embed_templates "blocks/*"

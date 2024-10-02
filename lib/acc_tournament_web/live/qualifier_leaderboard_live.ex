@@ -68,7 +68,7 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
       <div class="dots" />
     </div>
     <.qualifier_header qualifier_pool={@qualifier_pool} current_route={{:leaderboard, :players}} />
-    <div class="card max-w-screen-lg mx-auto relative">
+    <div :if={length(@players) > 0} class="card max-w-screen-lg mx-auto relative">
       <.table rows={@players} id="players">
         <:col :let={{rank, _player}} label="#">
           <%= rank %>
@@ -145,6 +145,10 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
 
     {:noreply,
      socket
-     |> assign(qualifier_pool: qualifier_pool, players: players)}
+     |> assign(
+       qualifier_pool: qualifier_pool,
+       players: players,
+       page_title: "Qualifier Leaderboard"
+     )}
   end
 end

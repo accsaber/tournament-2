@@ -36,13 +36,7 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
     </div>
     <.qualifier_header qualifier_pool={@qualifier_pool} current_route={{:map, @map.id}} />
     <div class="flex flex-col md:flex-row md:items-center gap-4 card relative max-w-screen-lg mx-auto">
-      <img
-        src={BeatMap.cover_url(@map)}
-        class={[
-          "rounded-xl size-24 md:size-36 aspect-square",
-          difficulty_to_class(@map.difficulty)
-        ]}
-      />
+      <img src={BeatMap.cover_url(@map)} class="rounded-xl size-24 md:size-36 aspect-square" />
       <div class="flex flex-col gap-1">
         <div class="text-3xl font-semibold"><%= @map.name %></div>
         <div class="flex gap-1">
@@ -93,7 +87,7 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
         </div>
       </div>
     </div>
-    <div class="relative max-w-screen-lg mx-auto p-6">
+    <div :if={length(@attempts) > 0} class="relative max-w-screen-lg mx-auto p-6">
       <.table rows={@attempts} id={"#{@map.id}-attempts"}>
         <:col :let={{rank, _attempt}} label="#">
           <%= rank %>
@@ -208,6 +202,7 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
       |> assign(
         map: map,
         attempts: attempts,
+        page_title: "#{map.name} Leaderboard",
         qualifier_pool: qualifier_pool
       )
     }
