@@ -69,3 +69,26 @@
 .glow {
   filter: url(#glow);
 }
+
+.uploadButton {
+  @apply px-3 py-2  dark:bg-neutral-800 rounded shadow transition-all w-full;
+
+  &:hover {
+    @apply shadow-lg dark:bg-neutral-700;
+  }
+}
+
+.rulebook-tab {
+  @apply flex p-1 px-3 rounded border-2 border-transparent items-center justify-center h-10;
+  @apply hover:border-neutral-100 dark:hover:border-neutral-800;
+
+  &[data-active] {
+    @apply bg-neutral-100 dark:bg-neutral-800;
+  }
+}
+
+footer {
+  & .social-link {
+    @apply w-6 h-6 mx-0.5 saturate-0 brightness-0 opacity-75 dark:invert dark:hover:invert-0 hover:brightness-100 hover:saturate-100 hover:opacity-100 transition-all;
+  }
+}
