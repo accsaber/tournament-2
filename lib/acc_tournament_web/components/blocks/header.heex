@@ -65,14 +65,16 @@
           </div>
           <div class="user-cutout -ml-5 bg-white/10 group-hover:bg-white/15 w-7" />
         </.link>
-        <%!-- <a
+        <a
           href={~p"/users/download_qualifier_plugin"}
           target="_blank"
           title="Download Qualifier Auth Code"
-          class="flex items-center justify-center  bg-white/10 hover:bg-white/15 w-10 h-10 gap-2"
+          :if={System.os_time(:second) > 1728151200}
+          class="flex items-center justify-center  bg-white/10 hover:bg-white/15 md:px-3 w-10 md:w-max h-10 gap-2"
         >
-          <.icon name="hero-shield-check" />
-        </a> --%>
+          <.icon name="hero-arrow-down-tray" />
+          <span class="hidden md:inline">Qualifier Key</span>
+        </a>
         <.link
           navigate={~p"/users/settings"}
           class="flex items-center justify-center bg-white/10 hover:bg-white/15 w-10 h-10 gap-2"
