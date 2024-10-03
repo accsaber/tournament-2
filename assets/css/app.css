@@ -1,5 +1,5 @@
 @import "tailwind.css";
+@import "components.css";
 @import "root.css";
 @import "header.css";
-@import "components.css";
 @import "forms.css";

@@ -10,6 +10,6 @@ module.exports = {
     "postcss-url": { url: "inline" },
     tailwindcss: {},
     autoprefixer: {},
-    "tailwindcss/nesting": {},
+    "postcss-nesting": {},
   },
 };
