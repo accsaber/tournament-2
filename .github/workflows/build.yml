@@ -18,7 +18,7 @@ jobs:
       PLATFORM: linux/arm64
     steps:
       - name: Verify we have API access
-        run: curl https://x-access-token:${{ secrets.GITHUB_TOKEN }}@api.github.com/user
+        run: curl -f https://x-access-token:${{ secrets.GITHUB_TOKEN }}@api.github.com
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Set up Docker Buildx
