@@ -46,15 +46,6 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
           ]}>
             <%= BeatMap.difficulty_int_to_friendly(@map.difficulty) %>
           </div>
-          <div
-            :if={@map.category}
-            class={[
-              "p-1 px-2 rounded w-max text-sm font-semibold",
-              "bg-neutral-100 dark:bg-neutral-900"
-            ]}
-          >
-            <%= @map.category.name %>
-          </div>
           <div class="rounded relative w-36 overflow-hidden bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center">
             <div
               class={[

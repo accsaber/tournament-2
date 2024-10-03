@@ -129,7 +129,7 @@ defmodule AccTournamentWeb.Router do
   scope "/users/", AccTournamentWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    get "/download_qualifier_plugin", PluginDownloadController, :download
+    get "/download_qualifier_key", PluginDownloadController, :download
 
     live_session :require_authenticated_user,
       on_mount: [{AccTournamentWeb.UserAuth, :ensure_authenticated}] do
