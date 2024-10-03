@@ -1,4 +1,4 @@
-name: Create and publish a Docker image
+name: build and push image
 
 on:
   push:
@@ -10,33 +10,26 @@ env:
 
 jobs:
   build-and-push-image:
-    strategy:
-      matrix:
-        include:
-          - arch: arm64
-            variant: v8
     runs-on: accsaber-arc
     permissions:
       contents: read
       packages: write
     env:
-      PLATFORM: linux/${{ matrix.arch }}${{ (matrix.variant != '' && format('/{0}', matrix.variant)) || '' }}
+      PLATFORM: linux/arm64
     steps:
+      - name: Verify we have API access
+        run: curl https://x-access-token:${{ secrets.GITHUB_TOKEN }}@api.github.com/user
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-        with:
-          platforms: ${{ matrix.arch }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Log in to the Container registry
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
+          logout: false
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
