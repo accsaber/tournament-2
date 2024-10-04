@@ -7,9 +7,7 @@ resources:
   - httproute.yml
 images:
   - name: tournament-website
-    digest: sha256:2c48a06f344c2c04f1daaa67ff03eba960ce5c03615fbc122fdfae810171260c
     newName: ghcr.io/accsaber/tournament-2
-    newTag: latest
 configMapGenerator:
   - name: acc-tournament-config
     envs:

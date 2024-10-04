@@ -1,8 +1,6 @@
 name: build and push image
 
-on:
-  push:
-    branches: ["main"]
+on: workflow_dispatch
 
 env:
   REGISTRY: ghcr.io
@@ -35,9 +33,10 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: "latest"
+          tags: deploy-${{ github.run_number }}
 
       - name: Build and push Docker image
+        id: push
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
@@ -47,3 +46,4 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: ${{ env.PLATFORM }}
+      - run: echo ${{ steps.push.outputs.digest }}
