@@ -62,7 +62,7 @@ defmodule AccTournamentWeb.QualifierScoreController do
     )
   end
 
-  @max_attempts 3
+  @max_attempts 5
 
   def remaining_attempts(conn, %{"hash" => hash, "difficulty" => diff}) do
     current_user = conn.assigns.current_user

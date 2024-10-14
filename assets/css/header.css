@@ -52,10 +52,10 @@ tournament-header {
     align-items: center;
     margin: 0 auto;
     @apply max-w-screen-lg gap-4 px-4 justify-between sm:justify-normal;
-  }
 
-  & nav {
-    @apply hidden sm:flex;
+    & > nav {
+      @apply hidden sm:flex;
+    }
   }
 
   & .logo {

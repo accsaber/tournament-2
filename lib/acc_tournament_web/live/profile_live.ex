@@ -124,6 +124,7 @@ defmodule AccTournamentWeb.ProfileLive do
       <div :if={length(@user.attempts) > 0} class="grid md:grid-cols-2 gap-4 mt-4 mb-12">
         <.link
           :for={attempt <- @user.attempts}
+          :if={!is_nil(attempt.weight)}
           navigate={~p"/qualifiers/map_leaderboard/#{attempt.map_id}"}
           class="rounded-xl bg-white dark:bg-neutral-800 shadow p-6 flex flex-col gap-6 overflow-hidden relative isolate"
         >
@@ -136,7 +137,6 @@ defmodule AccTournamentWeb.ProfileLive do
             <div class="flex flex-col  justify-center text-xl">
               <div class="text-2xl font-semibold"><%= attempt.map.name %></div>
               <div><%= attempt.map.mapper %></div>
-              <div><%= attempt.map.category.name %></div>
             </div>
           </div>
           <div class="flex flex-row gap-3 justify-between">
@@ -171,6 +171,7 @@ defmodule AccTournamentWeb.ProfileLive do
       user in User,
       left_join: attempts in assoc(user, :attempts),
       distinct: attempts.map_id,
+      order_by: [desc: attempts.score],
       preload: [
         :account_bindings,
         attempts: {attempts, [map: [:category]]}
@@ -185,6 +186,8 @@ defmodule AccTournamentWeb.ProfileLive do
       load_user()
       |> where(slug: ^slug)
       |> Repo.one()
+
+    IO.inspect(user)
 
     if is_nil(user) do
       raise AccTournamentWeb.ProfileLive.UserNotFound

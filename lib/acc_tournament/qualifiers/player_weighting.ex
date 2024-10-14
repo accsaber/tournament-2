@@ -5,7 +5,7 @@ defmodule AccTournament.Qualifiers.PlayerWeighting do
   use Oban.Worker
   import Ecto.Query, only: [from: 2, subquery: 1]
 
-  @counted_attempts 3
+  @counted_attempts 6
 
   @impl Oban.Worker
   def perform(%Oban.Job{}) do
@@ -37,17 +37,12 @@ defmodule AccTournament.Qualifiers.PlayerWeighting do
 
         weights = for attempt <- attempts, do: attempt.weight
 
-        padding =
-          Stream.cycle([0])
-          |> Enum.take(@counted_attempts)
-
-        weights =
-          (weights ++ padding)
-          |> Enum.take(@counted_attempts)
+        count = min(length(attempts), @counted_attempts)
+        scale = count / @counted_attempts
 
         average_weight = Enum.reduce(weights, &(&1 + &2)) / @counted_attempts
 
-        User.average_weight_changeset(player, %{average_weight: average_weight})
+        User.average_weight_changeset(player, %{average_weight: average_weight * scale})
         |> Repo.update!()
       end
     end)

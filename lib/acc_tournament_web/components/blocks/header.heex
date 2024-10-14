@@ -66,10 +66,10 @@
           <div class="user-cutout -ml-5 bg-white/10 group-hover:bg-white/15 w-7" />
         </.link>
         <a
+          :if={System.os_time(:second) > 1_728_151_200}
           href={~p"/users/download_qualifier_key"}
           target="_blank"
           title="Download Qualifier Auth Code"
-          :if={System.os_time(:second) > 1728151200}
           class="flex items-center justify-center  bg-white/10 hover:bg-white/15 md:px-3 w-10 md:w-max h-10 gap-2"
         >
           <.icon name="hero-arrow-down-tray" />
@@ -134,6 +134,28 @@
         <%= link.label %>
       </.link>
     </nav>
-    <nav></nav>
+    <div class="sm:hidden">
+      <button class="menu-toggle">
+        <%!-- <Icon src={Bars3} /> --%>
+        <.icon name="hero-bars-3" />
+      </button>
+    </div>
   </div>
+  <dialog class="p-4 bg-white dark:bg-neutral-900 rounded w-full mx-6">
+    <button
+      aria-label="Close"
+      class="close absolute p-1 top-4 right-4 rounded hover:bg-neutral-200 aspect-square w-9 h-9 flex items-center justify-center dark:hover:bg-neutral-800"
+    >
+      <.icon name="hero-x-mark" />
+    </button>
+    <nav class="flex-1 gap-2">
+      <.link
+        :for={link <- header_navigation()}
+        class={["pageNav", if(assigns[:route] && link.route == assigns[:route], do: "active")]}
+        navigate={link.navigate}
+      >
+        <%= link.label %>
+      </.link>
+    </nav>
+  </dialog>
 </tournament-header>

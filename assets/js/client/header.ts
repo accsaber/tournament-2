@@ -2,6 +2,9 @@ export class TournamentHeader extends HTMLElement {
   private canary = document.querySelector("#scroll_canary")!;
   private observer: IntersectionObserver;
   private _internals = this.attachInternals();
+  private navbox = this.querySelector("dialog")!;
+  private menuToggle = this.querySelector(".menu-toggle")!;
+  private close = this.querySelector(".close")!;
 
   constructor() {
     super();
@@ -13,6 +16,12 @@ export class TournamentHeader extends HTMLElement {
 
   connectedCallback() {
     this.observer.observe(this.canary);
+
+    this.menuToggle.addEventListener("click", () => {
+      this.navbox.showModal();
+    });
+
+    this.close.addEventListener("click", () => this.navbox.close());
   }
   disconnectedCallback() {
     this.observer.unobserve(this.canary);
