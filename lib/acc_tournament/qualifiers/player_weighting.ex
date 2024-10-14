@@ -12,7 +12,8 @@ defmodule AccTournament.Qualifiers.PlayerWeighting do
     attempts =
       from(a in Attempt,
         distinct: [a.map_id, a.player_id],
-        order_by: [asc: a.map_id, asc: a.player_id, desc: a.score]
+        order_by: [asc: a.map_id, asc: a.player_id, desc_nulls_last: a.score],
+        where: not is_nil(a.score)
       )
 
     attempts =

@@ -171,7 +171,7 @@ defmodule AccTournamentWeb.ProfileLive do
       user in User,
       left_join: attempts in assoc(user, :attempts),
       distinct: attempts.map_id,
-      order_by: [desc: attempts.score],
+      order_by: [desc_nulls_last: attempts.score],
       preload: [
         :account_bindings,
         attempts: {attempts, [map: [:category]]}
