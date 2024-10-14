@@ -35,15 +35,20 @@ defmodule AccTournament.Qualifiers.PlayerWeighting do
         attempts =
           for %Attempt{player_id: ^id} = attempt <- r.attempts, do: attempt
 
-        weights = for attempt <- attempts, do: attempt.weight
+        if(length(attempts) > 0) do
+          weights =
+            for(
+              attempt <- attempts,
+              do: attempt.weight
+            )
+            |> Enum.sort(&(&1 >= &2))
+            |> Enum.take(@counted_attempts)
 
-        count = min(length(attempts), @counted_attempts)
-        scale = count / @counted_attempts
+          average_weight = Enum.reduce(weights, &(&1 + &2)) / @counted_attempts
 
-        average_weight = Enum.reduce(weights, &(&1 + &2)) / @counted_attempts
-
-        User.average_weight_changeset(player, %{average_weight: average_weight * scale})
-        |> Repo.update!()
+          User.average_weight_changeset(player, %{average_weight: average_weight})
+          |> Repo.update!()
+        end
       end
     end)
 
