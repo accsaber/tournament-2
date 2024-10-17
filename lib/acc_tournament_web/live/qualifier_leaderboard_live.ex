@@ -57,7 +57,7 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
     ~H"""
     <div
       :if={length(@players) > 0}
-      class="dots-container absolute inset-0 overflow-hidden -top-8 h-full"
+      class="dots-container absolute inset-0 overflow-hidden -top-8 h-96"
     >
       <div class="absolute -inset-6 bottom-0 blur-[1.5rem]">
         <img
