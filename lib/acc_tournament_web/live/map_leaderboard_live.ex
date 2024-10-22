@@ -1,4 +1,5 @@
 defmodule AccTournamentWeb.MapLeaderboardLive do
+  alias AccTournament.Qualifiers.AttemptWeighting
   alias AccTournament.Levels.MapPool
   alias AccTournament.Qualifiers.Attempt
   alias AccTournament.Levels.BeatMap
@@ -34,7 +35,11 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
       </div>
       <div class="dots" />
     </div>
-    <.qualifier_header qualifier_pool={@qualifier_pool} current_route={{:map, @map.id}} />
+    <.qualifier_header
+      qualifier_pool={@qualifier_pool}
+      current_route={{:map, @map.id}}
+      show_reload_button={@current_user && @current_user.roles |> Enum.member?(:staff)}
+    />
     <div class="flex flex-col md:flex-row md:items-center gap-4 card relative max-w-screen-lg mx-auto">
       <img src={BeatMap.cover_url(@map)} class="rounded-xl size-24 md:size-36 aspect-square" />
       <div class="flex flex-col gap-1">
@@ -125,6 +130,22 @@ defmodule AccTournamentWeb.MapLeaderboardLive do
       </.table>
     </div>
     """
+  end
+
+  def handle_event("recalc", _params, socket) do
+    if socket.assigns.current_user && Enum.member?(socket.assigns.current_user.roles, :staff) do
+      AttemptWeighting.new(%{map_id: socket.assigns.map.id})
+      |> Oban.insert()
+      |> case do
+        {:ok, _job} ->
+          {:noreply, socket |> put_flash(:info, "Recalculating weights...")}
+
+        {:error, _} ->
+          {:noreply, socket |> put_flash(:error, "Something went wrong")}
+      end
+    else
+      {:noreply, socket |> put_flash(:error, "You aren't allowed to do that")}
+    end
   end
 
   def handle_info({:new_scores, map_id}, socket) do

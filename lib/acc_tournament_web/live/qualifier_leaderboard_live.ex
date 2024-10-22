@@ -1,9 +1,14 @@
 defmodule AccTournamentWeb.QualifierLeaderboardLive do
+  alias AccTournament.Qualifiers.PlayerWeighting
   alias AccTournament.Accounts.User
   alias AccTournament.Levels.MapPool
   alias AccTournament.Repo
   alias AccTournament.Levels.BeatMap
   use AccTournamentWeb, :live_view
+
+  attr :show_reload_button, :boolean, default: false
+  attr :current_route, :any
+  attr :qualifier_pool, MapPool
 
   def qualifier_header(assigns) do
     ~H"""
@@ -49,8 +54,40 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
         <.icon name="hero-arrow-down-tray" class="w-5 h-5" />
         <div class="hidden sm:block">Download playlist</div>
       </.link>
+      <button
+        :if={@show_reload_button}
+        href={~p"/api/map_pools/1/playlist"}
+        class="flex items-center hover:bg-black/5 dark:hover:bg-white/10 p-1.5 sm:px-3 rounded gap-2"
+        download="acc-qualifiers.bplist"
+        phx-click="recalc"
+      >
+        <%= case @current_route do %>
+          <% {:map, _map_id} -> %>
+            <.icon name="hero-calculator" class="w-5 h-5" />
+            <div class="hidden sm:block">Recalculate Weights</div>
+          <% _ -> %>
+            <.icon name="hero-calculator" class="w-5 h-5" />
+            <div class="hidden sm:block">Recalculate Ranks</div>
+        <% end %>
+      </button>
     </div>
     """
+  end
+
+  def handle_event("recalc", _params, socket) do
+    if socket.assigns.current_user && Enum.member?(socket.assigns.current_user.roles, :staff) do
+      PlayerWeighting.new(%{})
+      |> Oban.insert()
+      |> case do
+        {:ok, _job} ->
+          {:noreply, socket |> put_flash(:info, "Recalculating ranks...")}
+
+        {:error, _} ->
+          {:noreply, socket |> put_flash(:error, "Something went wrong")}
+      end
+    else
+      {:noreply, socket |> put_flash(:error, "You aren't allowed to do that")}
+    end
   end
 
   def render(assigns) do
@@ -67,7 +104,11 @@ defmodule AccTournamentWeb.QualifierLeaderboardLive do
       </div>
       <div class="dots" />
     </div>
-    <.qualifier_header qualifier_pool={@qualifier_pool} current_route={{:leaderboard, :players}} />
+    <.qualifier_header
+      qualifier_pool={@qualifier_pool}
+      current_route={{:leaderboard, :players}}
+      show_reload_button={@current_user && @current_user.roles |> Enum.member?(:staff)}
+    />
     <div :if={length(@players) > 0} class="card max-w-screen-lg mx-auto relative">
       <.table rows={@players} id="players">
         <:col :let={{rank, _player}} label="#">

@@ -95,54 +95,58 @@ defmodule AccTournamentWeb.QualifierScoreController do
 
     current_user = conn.assigns.current_user
 
-    case conn.body_params do
-      %{"song_hash" => hash, "difficulty" => diff} ->
-        beatmap =
-          from(b in BeatMap,
-            left_join: a in assoc(b, :attempts),
-            on: a.map_id == b.id and a.player_id == ^current_user.id,
-            where:
-              b.hash == ^hash and
-                b.difficulty == ^diff,
-            preload: [attempts: a]
-          )
-          |> Repo.one()
+    if System.os_time(:second) > 1_729_375_200 do
+      conn |> Conn.resp(:gone, "Qualifiers have ended")
+    else
+      case conn.body_params do
+        %{"song_hash" => hash, "difficulty" => diff} ->
+          beatmap =
+            from(b in BeatMap,
+              left_join: a in assoc(b, :attempts),
+              on: a.map_id == b.id and a.player_id == ^current_user.id,
+              where:
+                b.hash == ^hash and
+                  b.difficulty == ^diff,
+              preload: [attempts: a]
+            )
+            |> Repo.one()
 
-        case beatmap do
-          %BeatMap{attempts: attempts} ->
-            remaining_attempts = max(@max_attempts - length(attempts || []), 0)
+          case beatmap do
+            %BeatMap{attempts: attempts} ->
+              remaining_attempts = max(@max_attempts - length(attempts || []), 0)
 
-            case remaining_attempts do
-              0 ->
-                conn
-                |> put_status(:too_many_requests)
-                |> render(:attempt_created,
-                  attempt: nil,
-                  remaining_attempts: 0
-                )
+              case remaining_attempts do
+                0 ->
+                  conn
+                  |> put_status(:too_many_requests)
+                  |> render(:attempt_created,
+                    attempt: nil,
+                    remaining_attempts: 0
+                  )
 
-              _ ->
-                attempt =
-                  %Attempt{
-                    player_id: current_user.id,
-                    map_id: beatmap.id
-                  }
-                  |> Repo.insert!(returning: true)
+                _ ->
+                  attempt =
+                    %Attempt{
+                      player_id: current_user.id,
+                      map_id: beatmap.id
+                    }
+                    |> Repo.insert!(returning: true)
 
-                conn
-                |> render(:attempt_created,
-                  attempt: attempt,
-                  remaining_attempts: remaining_attempts - 1
-                )
-            end
+                  conn
+                  |> render(:attempt_created,
+                    attempt: attempt,
+                    remaining_attempts: remaining_attempts - 1
+                  )
+              end
 
-          _ ->
-            conn |> Conn.resp(:not_found, "Map not found")
-        end
+            _ ->
+              conn |> Conn.resp(:not_found, "Map not found")
+          end
 
-      _ ->
-        conn
-        |> Conn.resp(:bad_request, "Invalid request body")
+        _ ->
+          conn
+          |> Conn.resp(:bad_request, "Invalid request body")
+      end
     end
   end
 
