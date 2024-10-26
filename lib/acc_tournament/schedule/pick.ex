@@ -8,9 +8,10 @@ defmodule AccTournament.Schedule.Pick do
     belongs_to :match, AccTournament.Schedule.Match
     belongs_to :map, AccTournament.Levels.BeatMap
     belongs_to :picked_by, AccTournament.Accounts.User
+    belongs_to :winning_player, AccTournament.Accounts.User
 
-    embeds_one :player_1_score, AccTournament.Schedule.Pick.Score
-    embeds_one :player_2_score, AccTournament.Schedule.Pick.Score
+    field :player_1_score, :integer
+    field :player_2_score, :integer
 
     timestamps(type: :utc_datetime)
   end
@@ -18,8 +19,16 @@ defmodule AccTournament.Schedule.Pick do
   @doc false
   def changeset(pick, attrs) do
     pick
-    |> cast(attrs, [:pick_type])
-    |> validate_required([:pick_type])
+    |> cast(attrs, [
+      :pick_type,
+      :picked_by_id,
+      :winning_player_id,
+      :player_1_score,
+      :player_2_score,
+      :map_id,
+      :match_id
+    ])
+    |> validate_required([])
   end
 end
 

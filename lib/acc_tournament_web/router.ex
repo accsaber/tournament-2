@@ -13,6 +13,16 @@ defmodule AccTournamentWeb.Router do
     plug :fetch_current_user
   end
 
+  pipeline :overlay do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_live_flash
+    plug :put_root_layout, html: {AccTournamentWeb.Layouts, :overlay_root}
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+    plug :fetch_current_user
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
 
@@ -42,8 +52,20 @@ defmodule AccTournamentWeb.Router do
     scope "/admin" do
       live "/users", AdminUserDirectory
       live "/map_pools/:map_pool_id/add_map", AdminAddMapLive
+      live "/coordinator/match/:match_id", Coordinator.MatchAdminLive
+      live "/coordinator/pick/:pick_id", Coordinator.PickAdminLive
       live_dashboard "/dashboard", metrics: AccTournamentWeb.Telemetry
     end
+  end
+
+  scope "/overlay", AccTournamentWeb do
+    pipe_through [:overlay]
+
+    live "/picks", PicksBansLive
+    live "/header", HeaderOnlyLive
+    live "/cam/:id", PlayerCamLive
+    live "/ingame", InGameLive
+    live "/countdown", Overlay.IntroLive
   end
 
   live_session(:default, on_mount: {AccTournamentWeb.UserAuth, :mount_current_user}) do

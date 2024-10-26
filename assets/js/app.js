@@ -9,7 +9,6 @@ import "./client/analytics";
 import LocalDateTime from "./client/local-timestamp";
 import { getHooks } from "live_vue";
 import components from "../vue";
-import "../css/app.css";
 
 const csrfToken = document
   .querySelector("meta[name='csrf-token']")

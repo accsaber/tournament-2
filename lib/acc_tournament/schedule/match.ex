@@ -18,7 +18,7 @@ defmodule AccTournament.Schedule.Match do
   @doc false
   def changeset(match, attrs) do
     match
-    |> cast(attrs, [:scheduled_at])
-    |> validate_required([:scheduled_at])
+    |> cast(attrs, [:scheduled_at, :player_1_id, :player_2_id, :winner_id, :round_id])
+    |> validate_required([])
   end
 end

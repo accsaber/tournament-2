@@ -58,6 +58,15 @@ defmodule AccTournamentWeb do
     end
   end
 
+  def overlay_live_view do
+    quote do
+      use Phoenix.LiveView,
+        layout: {AccTournamentWeb.Layouts, :overlay}
+
+      unquote(html_helpers())
+    end
+  end
+
   def live_component do
     quote do
       use Phoenix.LiveComponent

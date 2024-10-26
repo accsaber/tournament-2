@@ -35,8 +35,8 @@ defmodule AccTournament.Repo.Migrations.AddMatchTable do
       add :map_id, references(:beat_maps, on_delete: :nothing)
       add :picked_by_id, references(:users, on_delete: :nothing)
 
-      add :player_1_score, :jsonb
-      add :player_2_score, :jsonb
+      add :player_1_score, :bigint
+      add :player_2_score, :bigint
 
       timestamps(type: :utc_datetime)
     end

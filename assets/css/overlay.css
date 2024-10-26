@@ -1,0 +1,66 @@
+@import "tailwind.css";
+@import "root.css";
+@import "components.css";
+
+body {
+  background: center / cover no-repeat;
+  width: 1280px;
+  height: 720px;
+  overflow: clip;
+  position: relative;
+  color: white;
+  color-scheme: dark;
+}
+
+.pick-grid {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  margin: auto 0;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+}
+
+@keyframes pickCropIn {
+  from {
+    clip-path: polygon(0 0, 0 0, 0 120px, 0 120px);
+  }
+  to {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+pick-info {
+  clip-path: polygon(0 0, 0 0, 0 120px, 0 120px);
+  animation: pickCropIn 0.5s ease forwards 1.5s;
+}
+pick-info:nth-last-of-type(-n + 2) {
+  display: flex !important;
+}
+.fade-in {
+  animation: fadeIn 0.5s ease forwards 1s;
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translate(0);
+  }
+  50% {
+    transform: translateY(-2rem);
+  }
+}
+
+.bob {
+  animation: bob 5s ease infinite;
+  filter: drop-shadow(0 0em 2em #fff5);
+}
+
+body {
+  background-color: #111;
+}

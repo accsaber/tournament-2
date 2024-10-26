@@ -8,8 +8,9 @@
     <.live_title suffix=" · Acc Tournament">
       <%= assigns[:page_title] || "Acc Tournament" %>
     </.live_title>
-    <LiveVue.Reload.vite_assets assets={["/js/app.js", "/css/site.css"]}>
-      <link phx-track-static rel="stylesheet" href={~p"/assets/site.css"} />
+    <LiveVue.Reload.vite_assets assets={["/js/app.js", "/js/overlay.ts", "/css/overlay.css"]}>
+      <link phx-track-static rel="stylesheet" href={~p"/assets/overlay.css"} />
+      <script phx-track-static type="module" src={~p"/assets/overlay.js"} />
       <script phx-track-static type="module" src={~p"/assets/app.js"} />
     </LiveVue.Reload.vite_assets>
     <svg width="0" height="0">
