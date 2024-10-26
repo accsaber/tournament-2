@@ -11,7 +11,6 @@ defmodule AccTournamentWeb.HeaderOnlyLive do
     assigns =
       assigns
       |> assign(
-        best_of: 3,
         picks:
           case assigns.stream do
             %Stream{current_match: %Match{picks: picks}} -> picks |> Enum.sort(&(&1.id < &2.id))
@@ -24,7 +23,7 @@ defmodule AccTournamentWeb.HeaderOnlyLive do
       match={@stream.current_match}
       player_1_wins={@player_1_wins}
       player_2_wins={@player_2_wins}
-      best_of={@best_of}
+      best_of={@stream.current_round.best_of}
     />
     """
   end

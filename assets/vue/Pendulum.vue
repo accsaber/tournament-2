@@ -5,27 +5,7 @@ import { onBeforeMount, reactive, ref } from "vue"
 const props = defineProps<{ player_1: string; player_2: string }>()
 
 const players = reactive<Map<LUID, string>>(new Map);
-const scores = reactive<Map<string, ScoreEvent["Score"]>>(new Map([
-    ["3033139560125578", {
-        Accuracy: 0.002,
-        Score: 1000,
-        Spectating: false,
-        MissCount: 0,
-        Combo: 123,
-        Deleted: false,
-        Failed: false,
-        LUID: 2
-    }], ["76561198101382389", {
-        Accuracy: 0.982,
-        Score: 1000,
-        Spectating: false,
-        MissCount: 0,
-        Combo: 123,
-        Deleted: false,
-        Failed: false,
-        LUID: 2
-    }]
-]));
+const scores = reactive<Map<string, ScoreEvent["Score"]>>(new Map());
 
 
 onBeforeMount(() => {
@@ -59,7 +39,7 @@ onBeforeMount(() => {
     };
 })
 
-const delta = ref(-0.006);
+const delta = ref(0);
 
 
 

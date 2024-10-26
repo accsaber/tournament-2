@@ -24,7 +24,7 @@ defmodule AccTournamentWeb.PicksBansLive do
       match={@stream.current_match}
       player_1_wins={@player_1_wins}
       player_2_wins={@player_2_wins}
-      best_of={@best_of}
+      best_of={@stream.current_round.best_of}
     />
     <div class="pick-grid p-4 px-12 gap-2">
       <%= for pick <- @picks do %>
@@ -48,7 +48,7 @@ defmodule AccTournamentWeb.PicksBansLive do
             <pick-info
               :if={
                 pick.map_id &&
-                  (@best_of <= 3 || !pick.winning_player_id)
+                  (@stream.current_round.best_of <= 3 || !pick.winning_player_id)
               }
               class="flex flex-col rounded row-span-3 w-56 bg-neutral-950 h-96 p-5 relative overflow-hidden"
             >

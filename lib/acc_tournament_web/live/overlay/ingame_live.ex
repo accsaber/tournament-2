@@ -10,7 +10,7 @@ defmodule AccTournamentWeb.InGameLive do
       match={@stream.current_match}
       player_1_wins={@player_1_wins}
       player_2_wins={@player_2_wins}
-      best_of={@best_of}
+      best_of={@stream.current_round.best_of}
     />
 
     <.vue

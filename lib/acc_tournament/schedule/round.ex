@@ -4,6 +4,7 @@ defmodule AccTournament.Schedule.Round do
 
   schema "rounds" do
     field :name, :string
+    field :best_of, :integer
 
     belongs_to :map_pool, AccTournament.Levels.MapPool
     has_many :matches, AccTournament.Schedule.Match
