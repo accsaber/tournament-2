@@ -15,6 +15,7 @@ defmodule AccTournament.Stream do
   @doc false
   def changeset(stream, attrs) do
     stream
-    |> cast(attrs, [:current_pick_id])
+    |> cast(attrs, [:current_pick_id, :current_match_id, :current_round_id])
+    |> IO.inspect()
   end
 end

@@ -52,8 +52,10 @@ defmodule AccTournamentWeb.Router do
     scope "/admin" do
       live "/users", AdminUserDirectory
       live "/map_pools/:map_pool_id/add_map", AdminAddMapLive
+      live "/coordinator/matches", Coordinator.MatchMgmtLive
       live "/coordinator/match/:match_id", Coordinator.MatchAdminLive
       live "/coordinator/pick/:pick_id", Coordinator.PickAdminLive
+      live "/stream", Coordinator.StreamAdminLive
       live_dashboard "/dashboard", metrics: AccTournamentWeb.Telemetry
     end
   end

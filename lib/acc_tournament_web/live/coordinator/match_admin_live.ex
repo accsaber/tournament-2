@@ -1,4 +1,5 @@
 defmodule AccTournamentWeb.Coordinator.MatchAdminLive do
+  alias AccTournament.Schedule.Round
   alias AccTournament.Accounts.User
   alias Phoenix.PubSub
   alias AccTournament.Schedule.Pick
@@ -47,10 +48,61 @@ defmodule AccTournamentWeb.Coordinator.MatchAdminLive do
     end
   end
 
+  def handle_event("save", %{"match" => match}, socket) do
+    socket.assigns.match
+    |> Match.changeset(match)
+    |> Repo.update()
+    |> case do
+      {:ok, match} ->
+        PubSub.broadcast!(AccTournament.PubSub, "stream_changed", {:stream_changed})
+        {:noreply, socket |> get_info(match.id) |> put_flash(:info, "Saved")}
+
+      _ ->
+        {:noreply, socket |> put_flash(:error, "Error saving match")}
+    end
+  end
+
   def render(assigns) do
     ~H"""
-    <details><pre><%= inspect(@match, pretty: true) %></pre></details>
-    <details>
+    <details open={!(@match.round && @match.player_1 && @match.player_2)}>
+      <summary>Match info (don't touch this unless you are an organiser)</summary>
+      <.form for={@form} id="match-info" phx-submit="save">
+        <.input
+          type="select"
+          field={@form[:round_id]}
+          label="Round"
+          options={
+            for %Round{name: name, id: id} <- @rounds do
+              {name, id}
+            end
+          }
+        />
+        <.input
+          type="select"
+          field={@form[:player_1_id]}
+          label="Player 1"
+          options={
+            for %User{display_name: name, id: id} <- @players do
+              {name, id}
+            end
+          }
+        />
+        <.input
+          type="select"
+          field={@form[:player_2_id]}
+          label="Player 2"
+          options={
+            for %User{display_name: name, id: id} <- @players do
+              {name, id}
+            end
+          }
+        />
+        <.button type="submit">Save</.button>
+      </.form>
+    </details>
+
+    <hr class="my-12 dark:border-neutral-700" />
+    <details :if={@match.player_1_id && @match.player_2_id}>
       <summary>set winner</summary>
       <form method="post" phx-submit="set_winner">
         <div class="flex gap-2">
@@ -88,8 +140,13 @@ defmodule AccTournamentWeb.Coordinator.MatchAdminLive do
       </:action>
     </.table>
 
-    <h2 class="text-3xl">Create Pick/Ban</h2>
-    <form class="flex gap-2 flex-row" method="post" phx-submit="create_pick">
+    <form
+      :if={@match.player_1 && @match.player_2}
+      class="flex gap-2 flex-row"
+      method="post"
+      phx-submit="create_pick"
+    >
+      <h2 class="text-3xl">Create Pick/Ban</h2>
       <.button name="player_id" value={@match.player_1_id}>
         <%= @match.player_1.display_name %>
       </.button>
@@ -107,7 +164,7 @@ defmodule AccTournamentWeb.Coordinator.MatchAdminLive do
     {:ok, socket}
   end
 
-  def handle_params(%{"match_id" => id}, _uri, socket) do
+  def get_info(socket, id) do
     import Ecto.Query, only: [from: 2]
 
     match =
@@ -117,6 +174,15 @@ defmodule AccTournamentWeb.Coordinator.MatchAdminLive do
       )
       |> Repo.one!()
 
-    {:noreply, socket |> assign(match: match)}
+    rounds = Round |> Repo.all()
+    players = User |> Repo.all()
+
+    changeset = match |> Match.changeset(%{})
+
+    socket |> assign(match: match, form: to_form(changeset), players: players, rounds: rounds)
+  end
+
+  def handle_params(%{"match_id" => id}, _uri, socket) do
+    {:noreply, socket |> get_info(id)}
   end
 end
