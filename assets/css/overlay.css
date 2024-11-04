@@ -60,7 +60,3 @@ pick-info:nth-last-of-type(-n + 2) {
   animation: bob 10s ease-in-out infinite;
   filter: drop-shadow(0 0em 2em #fff5);
 }
-
-body {
-  background-color: #111;
-}

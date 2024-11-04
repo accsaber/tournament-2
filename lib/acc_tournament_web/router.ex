@@ -68,6 +68,7 @@ defmodule AccTournamentWeb.Router do
     live "/cam/:id", PlayerCamLive
     live "/ingame", InGameLive
     live "/countdown", Overlay.IntroLive
+    live "/player_intro", Overlay.PlayerIntroLive
   end
 
   live_session(:default, on_mount: {AccTournamentWeb.UserAuth, :mount_current_user}) do

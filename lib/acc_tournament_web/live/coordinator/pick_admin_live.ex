@@ -38,7 +38,7 @@ defmodule AccTournamentWeb.Coordinator.PickAdminLive do
         }
       />
       <.input type="number" field={@form[:player_1_score]} label="Player 1 score" />
-      <.input type="number" field={@form[:player_1_score]} label="Player 2 score" />
+      <.input type="number" field={@form[:player_2_score]} label="Player 2 score" />
 
       <.input
         type="select"

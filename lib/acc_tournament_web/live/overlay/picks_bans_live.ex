@@ -55,7 +55,7 @@ defmodule AccTournamentWeb.PicksBansLive do
               <img src={BeatMap.cover_url(pick.map)} class="size-32 scale-150 absolute blur-xl " />
               <img src={BeatMap.cover_url(pick.map)} class="size-32 rounded mb-3 relative" />
               <div class="text-xl font-semibold relative"><%= pick.map.name %></div>
-              <div class="text-xl relative whitespace-nowrap w-full text-ellipsis">
+              <div class="text-xl relative w-full text-ellipsis">
                 <%= pick.map.artist %>
               </div>
               <div class="text-xl relative"><%= pick.map.mapper %></div>

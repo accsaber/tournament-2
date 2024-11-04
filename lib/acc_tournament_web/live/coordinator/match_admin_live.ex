@@ -55,7 +55,7 @@ defmodule AccTournamentWeb.Coordinator.MatchAdminLive do
     |> case do
       {:ok, match} ->
         PubSub.broadcast!(AccTournament.PubSub, "stream_changed", {:stream_changed})
-        {:noreply, socket |> get_info(match.id) |> put_flash(:info, "Saved")}
+        {:noreply, socket |> put_flash(:info, "Saved")}
 
       _ ->
         {:noreply, socket |> put_flash(:error, "Error saving match")}
@@ -118,7 +118,7 @@ defmodule AccTournamentWeb.Coordinator.MatchAdminLive do
         </div>
       </form>
     </details>
-    <.table rows={@match.picks} id="picks">
+    <.table rows={@match.picks |> Enum.sort(&(&1.inserted_at <= &2.inserted_at))} id="picks">
       <:col :let={pick} label="Map">
         <%= case pick.map do %>
           <% nil -> %>
@@ -165,7 +165,7 @@ defmodule AccTournamentWeb.Coordinator.MatchAdminLive do
   end
 
   def get_info(socket, id) do
-    import Ecto.Query, only: [from: 2]
+    import Ecto.Query, only: [from: 2, order_by: 2]
 
     match =
       from(match in Match,
@@ -175,7 +175,7 @@ defmodule AccTournamentWeb.Coordinator.MatchAdminLive do
       |> Repo.one!()
 
     rounds = Round |> Repo.all()
-    players = User |> Repo.all()
+    players = User |> order_by(asc: :display_name) |> Repo.all()
 
     changeset = match |> Match.changeset(%{})
 
